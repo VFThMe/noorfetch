@@ -5,7 +5,7 @@
 
 **RSFetch** a minimalistic and fast summary of information about your computer, written in Rust!
 
-![Static Badge](https://codeberg.org/limforge/RSFetch/src/branch/main/screenshots/RSFetch_screenshot.png)
+![RSFetch screenshot](https://codeberg.org/limforge/RSFetch/src/branch/main/screenshots/RSFetch_screenshot.png)
 
 ## Goals
 - [ ] Create configuration file
