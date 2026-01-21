@@ -34,9 +34,9 @@ fn main() {
         System::kernel_version().unwrap_or("Unknown".to_string())
     };
 
-    println!("{} {} {}", ">".green().bold(), "   Операционная система:".blue().bold(), os);
-    println!("{} {} {}", ">".green().bold(), "   Имя пользователя:".red().bold(), username);
-    println!("{} {} {}/{} GB", ">".green().bold(), "   ОЗУ:".yellow().bold(), used_memory / 1024 / 1024, total_memory / 1024 / 1024); 
-    println!("{} {} {}", ">".green().bold(), "   Версия ядра:".green().bold(), kernel);
+    println!("{} {} {}", ">".green().bold(), "   os:".blue().bold(), os);
+    println!("{} {} {}", ">".green().bold(), "   user:".red().bold(), username);
+    println!("{} {} {}/{} GB", ">".green().bold(), "   RAM:".yellow().bold(), used_memory / 1024 / 1024, total_memory / 1024 / 1024); 
+    println!("{} {} {}", ">".green().bold(), "   krnl:".green().bold(), kernel);
     println!("{}  {}", "©".cyan(), format!("RSFetch v{} | GNU GPLv3 License | 2026", env!("CARGO_PKG_VERSION")).dimmed());
 }
