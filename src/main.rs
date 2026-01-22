@@ -39,7 +39,7 @@ fn main() {
     if font_detector::nerd_font() {
         println!("{} {} {}", "> |".green().bold(), "   󰆥 :".blue().bold(), os);
         println!("{} {} {}", "> |".green().bold(), "    :".red().bold(), username);
-        println!("{} {} {}/{} MB", "> |".green().bold(), "    :".yellow().bold(), used_memory / 1024 / 1024, total_memory / 1024 / 1024); 
+        println!("{} {} {}/{} MB", "> |".green().bold(), "    :".yellow().bold(), used_memory / 1024 / 1024, total_memory / 1024 / 1024); 
         println!("{} {} {}", "> |".green().bold(), "    :".green().bold(), kernel);
     } else {
         println!("{} {} {}", "> |".green().bold(), "   os:".blue().bold(), os);
