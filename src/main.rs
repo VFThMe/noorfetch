@@ -5,6 +5,9 @@ use whoami;
 use colored::Colorize;
 use os_release::OsRelease;
 
+#[path = "ux/detect_icons.rs"]
+mod font_detector;
+
 fn main() {
 
     // Examination of OS
@@ -17,8 +20,7 @@ fn main() {
     } else {
         "Unknown".to_string()
     };
-
-
+    
     // Update the information of system
     let mut sys = System::new_all();
     sys.refresh_all();
@@ -34,9 +36,18 @@ fn main() {
         System::kernel_version().unwrap_or("Unknown".to_string())
     };
 
-    println!("{} {} {}", ">".green().bold(), "   os:".blue().bold(), os);
-    println!("{} {} {}", ">".green().bold(), "   user:".red().bold(), username);
-    println!("{} {} {}/{} MB", ">".green().bold(), "   RAM:".yellow().bold(), used_memory / 1024 / 1024, total_memory / 1024 / 1024); 
-    println!("{} {} {}", ">".green().bold(), "   krnl:".green().bold(), kernel);
+    if font_detector::nerd_font() {
+        println!("{} {} {}", "> |".green().bold(), "   󰆥 :".blue().bold(), os);
+        println!("{} {} {}", "> |".green().bold(), "    :".red().bold(), username);
+        println!("{} {} {}/{} MB", "> |".green().bold(), "    :".yellow().bold(), used_memory / 1024 / 1024, total_memory / 1024 / 1024); 
+        println!("{} {} {}", "> |".green().bold(), "    :".green().bold(), kernel);
+    } else {
+        println!("{} {} {}", "> |".green().bold(), "   os:".blue().bold(), os);
+        println!("{} {} {}", "> |".green().bold(), "   user:".red().bold(), username);
+        println!("{} {} {}/{} MB", "> |".green().bold(), "   RAM:".yellow().bold(), used_memory / 1024 / 1024, total_memory / 1024 / 1024); 
+        println!("{} {} {}", "> |".green().bold(), "   krnl:".green().bold(), kernel);
+        println!("{}", "Please install a Jetbrains Mono Nerd to see icons!".dimmed());
+    }
+    
     println!("{}  {}", "©".cyan(), format!("RSFetch v{} | GNU GPLv3 License | 2026", env!("CARGO_PKG_VERSION")).dimmed());
 }
