@@ -53,3 +53,4 @@ This project incorporates the following Rust libraries:
 * [whoami-2.0.2](https://crates.io/crates/whoami) — Apache-2.0, BSL-1.0, or MIT License
 * [colored-3.1.1](https://crates.io/crates/colored) — MPL-2.0 License
 * [os-release-0.1.0](https://crates.io/crates/os-release) — MIT License
+* [font-kit-0.14.3](https://crates.io/crates/font-kit) - MIT License or Apache 2.0
