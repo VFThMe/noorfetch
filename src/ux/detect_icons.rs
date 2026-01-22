@@ -8,7 +8,6 @@ pub fn nerd_font() -> bool {
         FamilyName::Title("JetBrainsMono NF".to_string()),
     ];
 
-    // Можно сократить match до одной строки .is_ok()
     SystemSource::new()
         .select_best_match(&families, &Properties::new())
         .is_ok()
