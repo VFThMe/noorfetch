@@ -1,6 +1,7 @@
 # RSFetch
 
-![Static Badge](https://img.shields.io/badge/release-0.1.0-green?style=for-the-badge)![Static Badge](https://img.shields.io/badge/license-GNU%20GPL--v3.0--only-green?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/release-0.2.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat)
+
 
 
 **RSFetch** a minimalistic and fast summary of information about your computer, written in Rust!
