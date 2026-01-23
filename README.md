@@ -10,7 +10,7 @@
 - [ ] Create configuration file
 - [ ] Create package in AUR
 - [ ] Create RSFetch installer
-- [ ] Create initial ASCII art 
+- [x] Create initial ASCII art 
 
 ## Installation
 ### Dependencies
