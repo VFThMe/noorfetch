@@ -2,8 +2,6 @@
 
 ![Static Badge](https://img.shields.io/badge/release-0.2.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat)
 
-
-
 **RSFetch** a minimalistic and fast summary of information about your computer, written in Rust!
 
 ![RSFetch screenshot](https://codeberg.org/limforge/RSFetch/raw/branch/main/screenshots/rsfetch_screenshot.png)
@@ -33,17 +31,12 @@ cd rsfetch
 
 Compile the project using Cargo
 ```bash
-cargo build --release
+cargo install --path .
 ```
 
-Activate and run RSFetch
+And run RSFetch
 ```bash
-chmod +x ./target/release/rsfetch
-./target/release/rsfetch
-```
-or
-```bash
-cargo run --quiet
+rsfetch
 ```
 
 ## License
