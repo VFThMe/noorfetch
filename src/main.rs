@@ -73,8 +73,8 @@ fn main() {
     ("os :",   "󰆥 :", os.clone(),               Color::Blue),
     ("user :", " :", username.clone(),         Color::Red),
     ("host :", "󰆋 :", hostname.clone(),         Color::White),
-    ("ram :",  " :", format!("{}/{} MB", used_memory.clone() / 1024 / 1024, total_memory.clone() / 1024 / 1024), Color::Yellow),
-    ("swap :", " :", format!("{}/{} MB", used_swap.clone() / 1024 / 1024, total_swap.clone() / 1024 / 1024), Color::Magenta),
+    ("ram :",  " :", format!("{}/{} MB", used_memory.clone() / 1000 / 1000, total_memory.clone() / 1000 / 1000), Color::Yellow),
+    ("swap :", " :", format!("{}/{} MB", used_swap.clone() / 1000 / 1000, total_swap.clone() / 1000 / 1000), Color::Magenta),
     ("cpu :",  " :", format!("{} ({})", cpu_brand, cpu.clone()), Color::Red),
     ("krnl :", " :", kernel.clone(),           Color::Green),
 ];
