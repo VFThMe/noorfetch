@@ -9,7 +9,7 @@
 ## Goals
 - [ ] Create configuration file
 - [ ] Create package in AUR
-- [ ] Create RSFetch installer
+- [x] Create RSFetch installer
 - [x] Create initial ASCII art 
 
 ## Installation
@@ -21,7 +21,10 @@
 
 **Git** version `2.52.0`
 
-### Step-by-step instructions
+### Installations
+**Run** ``installer_linux.sh``. **Warning**: This script only supports Arch, Gentoo, Ubuntu, and Debian. Using other operating systems will result in an error.
+
+### Build from source
 
 Instal the RSFetch from the Codeberg
 ```bash
