@@ -352,21 +352,21 @@ g@@@@@@@@@#####################@@@@@@@@@@@@@@
   f*00000*     ((@@@@@@@@@@@))          
  .0000000*! JJJMMMMMMMMMMMMMM@LLLL``    
  .000000mm?JJJJMMMMMMMMMMMMMMMMMMMM@``  
- .000000mm?JJJJ@@MMMMMMMMMMMMMMMMMMMMMtt
- .000000mmTJXJJJJ```DDDDDDMMMMMMMMMMMMMM
- .00000mmmmJXJJ`        0DDDMMMMMMMMMMMM
- .00000mmmmJXJ`           0DJMMMMMMMMMMM
- .00000mmJmJfJ   @@@        JJMMMMMMMMMM
- .00000mmJmJf`    @@@@@@@@  `JMMMMMMMMMM
- .00000mmJmJf   @@ @@@       aaaaa`MMMMM
- .000000mJmJf   @@@@@@           ---MMMM
- .000000mmmJf                 X``MMMMMMM
- .0000000mmqff                XHHMMMMMMM
- .0000000mmqqqff              XHHMMMMMMM
- .0000000mm0qqqqq             XHHMMMMMMM
- .0000000mm0qqqqqq            @HHMMMMMMM
- .0000000mm` ..qqq            @@HMMMMMMM
-  f0000000u    .qq            ``@@@@@@@@
+ .000000mm?JJJJ@@MMMMMMMMMMMMMMMMMMMMMt 
+ .000000mmTJXJJJJ```DDDDDDMMMMMMMMMMMMM 
+ .00000mmmmJXJJ`        0DDDMMMMMMMMMMM 
+ .00000mmmmJXJ`           0DJMMMMMMMMMM 
+ .00000mmJmJfJ   @@@        JJMMMMMMMMM 
+ .00000mmJmJf`    @@@@@@@@  `JMMMMMMMMM 
+ .00000mmJmJf   @@ @@@       aaaaa`MMMM 
+ .000000mJmJf   @@@@@@           ---MMM 
+ .000000mmmJf                 X``MMMMMM 
+ .0000000mmqff                XHHMMMMMM 
+ .0000000mmqqqff              XHHMMMMMM 
+ .0000000mm0qqqqq             XHHMMMMMM 
+ .0000000mm0qqqqqq            @HHMMMMMM 
+ .0000000mm` ..qqq            @@HMMMMMM 
+  f0000000u    .qq            ``@@@@@@@ 
     .000`       .q                ````` 
 "#,
         Distro::Tails => r#"      ``
