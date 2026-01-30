@@ -9,7 +9,7 @@
 ## Goals
 - [ ] Create configuration file
 - [ ] Create package in AUR
-- [x] Create RSFetch installer
+- [x] Create noorfetch installer
 - [x] Create initial ASCII art 
 
 ## Installation
