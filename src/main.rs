@@ -131,5 +131,5 @@ for i in 0..max_l {
 
     // println!("{} {} {}", prefix, key.color(color).bold(), value);
     // Displaying the program version and license
-    // println!("{}  {}", "©".cyan(), format!("RSFetch v{} | GNU GPLv3 License | 2026", env!("CARGO_PKG_VERSION")).dimmed());
+    // println!("{}  {}", "©".cyan(), format!("Noorfetch v{} | GNU GPLv3 License | 2026", env!("CARGO_PKG_VERSION")).dimmed());
 }

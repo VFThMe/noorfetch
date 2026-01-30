@@ -1,6 +1,6 @@
 [package]
-name = "rsfetch"
-version = "0.2.6"
+name = "noorfetch"
+version = "0.3.6"
 edition = "2024"
 
 [dependencies]

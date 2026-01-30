@@ -45,7 +45,7 @@
 
 // pub fn get_path() -> PathBuf {
 //     // Получаем директорию конфигурации с помощью directories crate
-//     if let Some(proj_dirs) = ProjectDirs::from("", "", "rsfetch") {
+//     if let Some(proj_dirs) = ProjectDirs::from("", "", "noorfetch") {
 //         let config_dir = proj_dirs.config_dir();
 //         if !config_dir.exists() {
 //             let _ = fs::create_dir_all(config_dir);

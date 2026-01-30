@@ -6,7 +6,7 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m' # No Colour
 
-echo -e "${BLUE}=== RSFetch Installer ===${NC}"
+echo -e "${BLUE}=== Noorfetch Installer ===${NC}"
 
 # Root check (we ask in advance so as not to be interrupted)
 if [ "$EUID" -ne 0 ]; then
@@ -66,9 +66,9 @@ else
 fi
 
 # Installing the binary file
-echo -e "${BLUE}[4/4] Копирование бинарного файла в /usr/local/bin...${NC}"
-sudo cp target/release/rsfetch /usr/local/bin/rsfetch
-sudo chmod +x /usr/local/bin/rsfetch
+echo -e "${BLUE}[4/4] Copying binary file to/usr/local/bin...${NC}"
+sudo cp target/release/noorfetch /usr/local/bin/noorfetch
+sudo chmod +x /usr/local/bin/noorfetch
 
 echo -e "${GREEN}=== Installation completed successfully! ===${NC}"
-echo -e "Now you can run the programme by entering: ${BLUE}rsfetch${NC}"
+echo -e "Now you can run the programme by entering: ${BLUE}noorfetch${NC}"
