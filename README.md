@@ -1,4 +1,4 @@
-# RSFetch
+# Noorfetch
 
 ![Static Badge](https://img.shields.io/badge/release-0.2.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat)
 
