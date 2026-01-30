@@ -55,7 +55,7 @@ fn main() {
 
     // Create variables where we store information about the user, memory, and kernel from sysinfo, whoami, and os_release.
     // Создаем переменные, в которых мы будем хранить информацию о пользователе, памяти и ядре из sysinfo, whoami и os_release.
-    let username = whoami::realname().unwrap_or_else(|_| "<unknown>".to_string());
+    let username = whoami::username().unwrap_or_else(|_| "<unknown>".to_string());
     let total_memory = sys.total_memory();
     let used_memory = sys.used_memory();
     let total_swap = sys.total_swap();
