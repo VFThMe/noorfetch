@@ -4,7 +4,7 @@
 
 **Noorfetch** (arab. نور) a minimalistic and fast summary of information about your computer, written in Rust!
 
-![RSFetch screenshot](https://codeberg.org/limforge/RSFetch/raw/branch/main/screenshots/rsfetch_screenshot.png)
+![RSFetch screenshot](https://codeberg.org/limforge/noorfetch/raw/branch/main/screenshots/noorfetch_screenshot.png)
 
 ## Goals
 - [ ] Create configuration file
