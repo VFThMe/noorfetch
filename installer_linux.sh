@@ -25,20 +25,32 @@ if ! command -v cargo &> /dev/null; then
     if [ -f /etc/os-release ]; then
         . /etc/os-release
         case $ID in
-            ubuntu|debian)
+            ubuntu|debian|popos|xubuntu|lubuntu|moebuntu|devuan)
                 sudo apt-get update
                 sudo apt-get install -y cargo rustc build-essential
                 ;;
-            arch)
+            arch|manjaro|artix|cachyos|endeavouros|garuda)
                 sudo pacman -Syu --noconfirm rust
                 ;;
-            fedora)
+            fedora|nobara)
                 sudo dnf install -y rust cargo
                 ;;
-            gentoo)
+            gentoo|pentoo)
                 echo -e "${GREEN}Gentoo detected. Emerging dev-lang/rust...${NC}"
                 sudo emerge --ask=n dev-lang/rust
                 ;;
+	    alt|altlinux)
+		sudo apt-get install rust rust-cargo
+		;;
+	    freebsd)
+		doas pkg install rust cargo
+		;;
+	    void|voidlinux)
+		sudo xbps-install -Sy cargo rust
+		;;
+	    opensuse|suse)
+		sudo zypper -in cargo rust
+		;;
             *)
                 echo -e "${RED}The $ID distribution is not supported by this script.${NC}"
                 exit 1

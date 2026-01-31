@@ -89,8 +89,8 @@ fn main() {
     ("user ", username.clone(),         Color::Red),
     ("host ", hostname.clone(),         Color::White),
     ("wm/de ", environment,     Color::Green),
-    ("ram ", format!("{}/{} MB", used_memory / 1000 / 1000, total_memory / 1000 / 1000), Color::Yellow),
-    ("swap ", format!("{}/{} MB", used_swap / 1000 / 1000, total_swap / 1000 / 1000), Color::Magenta),
+    ("ram ", format!("{}/{} MB", used_memory / 1024 / 1024, total_memory / 1024 / 1024), Color::Yellow),
+    ("swap ", format!("{}/{} MB", used_swap / 1024 / 1024, total_swap / 1024 / 1024), Color::Magenta),
     ("cpu ",  format!("{} ({})", cpu_brand, cpu), Color::Red),
     ("krnl ", kernel,           Color::Green),
 ];
