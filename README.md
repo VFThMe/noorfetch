@@ -21,7 +21,7 @@
 
 **Git** version `2.52.0`
 
-### Installations
+### AUR
 Get **Noorfetch** from **AUR** (Arch User Repository) right now!
 ```bash
 git clone https://aur.archlinux.org/noorfetch.git
