@@ -1,6 +1,6 @@
 # Noorfetch
 
-![Static Badge](https://img.shields.io/badge/release-0.3.6-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat)
+![Static Badge](https://img.shields.io/badge/release-0.3.6-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
 
 **Noorfetch** (arab. نور) a minimalistic and fast summary of information about your computer, written in Rust!
 
@@ -22,6 +22,22 @@
 **Git** version `2.52.0`
 
 ### Installations
+Get **Noorfetch** from **AUR** (Arch User Repository) right now!
+```bash
+git clone https://aur.archlinux.org/noorfetch.git
+cd noorfetch
+makepkg -si
+```
+
+**Or**
+```bash
+yay -Syu  noorfetch
+```
+```bash
+paru -Syu noorfetch
+```
+
+### Run the installer
 **Run** ``installer_linux.sh``. **Warning**: This script only supports Arch, Gentoo, Ubuntu, and Debian. Using other operating systems will result in an error.
 
 ### Build from source
