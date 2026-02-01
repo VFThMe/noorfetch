@@ -120,6 +120,7 @@ looooc            :oo'
         '''  ''''"#,
 
             Distro::Arch => r#"
+
          /\
         /  \
        /    \

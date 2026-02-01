@@ -1,8 +1,6 @@
-use sysinfo::{
-    System,
-};
+use sysinfo::*;
 use whoami;
-use colored::{ Colorize, Color };
+use colored::*;
 use os_release::OsRelease;
 use std;
 
@@ -43,7 +41,7 @@ fn main() {
     } else {
         "Unknown".to_string()
     };
-    
+   
     // Create a variable distro where we call the function from the file ascii.rs. Создаем переменную distro, в которой мы вызываем функцию из файла ascii.rs.
     let distro = Distro::from_string(&os); // Change &os to a suitable string for debugging. // Измените &os на подходящую строку для дебага
     let art = distro.ascii_art();
@@ -55,22 +53,23 @@ fn main() {
 
     // Create variables where we store information about the user, memory, and kernel from sysinfo, whoami, and os_release.
     // Создаем переменные, в которых мы будем хранить информацию о пользователе, памяти и ядре из sysinfo, whoami и os_release.
-    let username = whoami::username().unwrap_or_else(|_| "<unknown>".to_string());
-    let total_memory = sys.total_memory();
-    let used_memory = sys.used_memory();
-    let total_swap = sys.total_swap();
-    let used_swap = sys.used_swap();
-    let cpu = sys.cpus().len();
-    let environment = if cfg!(target_os = "windows") {
+    let username      =       whoami::username().unwrap_or_else(|_| "<unknown>".to_string());
+    let total_memory  =       sys.total_memory();
+    let used_memory   =       sys.used_memory();
+    let total_swap    =       sys.total_swap();
+    let used_swap     =       sys.used_swap();
+    let cpu           =       sys.cpus().len();
+    let target_proc   =       1;
+    let environment   = if cfg!(target_os = "windows") {
 	format!("Explorer DE")
     } else if cfg!(target_os = "macos") {
 	format!("Aqua MacOS")
     } else {
 	environment::get_wm().unwrap_or_else(|| "Unknown".to_string())
     };
-    let cpu_brand = sys.cpus().get(0).map(|c| c.brand()).unwrap_or("Unknown CPU");
-    let hostname = System::host_name().unwrap_or("Unknown".to_string());
-    let kernel = if cfg!(target_os = "windows") { 
+    let cpu_brand     = sys.cpus().get(0).map(|c| c.brand()).unwrap_or("Unknown CPU");
+    let hostname      = System::host_name().unwrap_or("Unknown".to_string());
+    let kernel        = if cfg!(target_os = "windows") { 
         format!("Windows NT {}", System::kernel_version().unwrap_or("Unknown".to_string())) 
     } else if cfg!(target_os = "macos") { 
         format!("Darwin {}", System::kernel_version().unwrap_or("Unknown".to_string())) 
@@ -79,21 +78,30 @@ fn main() {
     } else { 
         System::kernel_version().unwrap_or("Unknown".to_string())
     };
+    let init = if let Some(process) = sys.process(Pid::from(target_proc)) {
+        process.name().to_string_lossy().into_owned()
+    } else {
+        "Unknown".to_string()
+    };
 
     // Check icon support and the presence of the --legacy or -l flag. Проверяем наличие значков и наличие флага --legacy или -l.
     // let use_icons = font_detector::nerd_font() && !is_legacy;
 
     // Create a vector where we specify each module of our fetch. Создаем вектор где указываем каждый модуль нашего фетча
-    let rsfetch = vec![
-    ("os ", os.clone(),               Color::Blue),
-    ("user ", username.clone(),         Color::Red),
-    ("host ", hostname.clone(),         Color::White),
-    ("wm/de ", environment,     Color::Green),
-    ("ram ", format!("{}/{} MB", used_memory / 1024 / 1024, total_memory / 1024 / 1024), Color::Yellow),
-    ("swap ", format!("{}/{} MB", used_swap / 1024 / 1024, total_swap / 1024 / 1024), Color::Magenta),
-    ("cpu ",  format!("{} ({})", cpu_brand, cpu), Color::Red),
-    ("krnl ", kernel,           Color::Green),
-];
+    let noorfetch = vec![
+	("os ",      os.clone(),                 Color::TrueColor { r: 220, g: 138, b: 120 } ),      //   rosewater
+	("user ",    username.clone(),           Color::TrueColor { r: 221, g: 120, b: 120 } ),     //    flamingo
+	("host ",    hostname.clone(),           Color::TrueColor { r: 234, g: 118, b: 203, } ),   //     pink 
+	("wm/de ",   environment,                Color::TrueColor { r: 136, g: 57, b: 239 } ),    //      mauve 
+	("init ",    init,                       Color::TrueColor { r: 210, g: 15, b: 57  } ),   //       red
+	
+	("ram ",  format!("{}/{} MB", used_memory / 2048, total_memory / 2048), Color::TrueColor { r: 230, g: 69, b: 83, }),   // maroon
+	("swap ", format!("{}/{} MB", used_swap / 2048, total_swap / 2048),     Color::TrueColor { r: 254, g: 100, b: 11, } ), // peach
+	("cpu ",  format!("{} ({})", cpu_brand, cpu),                           Color::TrueColor { r: 223, g: 142, b: 29, }),  // yellow
+	
+	("krnl ",    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }), // green
+    ];
+    
     // Create another vector. Создаем еще один вектор
     let mut info_lines: Vec<String> = Vec::new();
     
@@ -101,7 +109,7 @@ fn main() {
     info_lines.push(format!("{}@{}", username, hostname));
     info_lines.push("-".repeat(username.len() + hostname.len() + 1));
 
-    for (label, value, color) in rsfetch {
+    for (label, value, color) in noorfetch {
         info_lines.push(format!("{:<6} {}", label.color(color).bold(), value));
     }
 
@@ -131,7 +139,7 @@ for i in 0..max_l {
     // Printing a pretty border. Печатаем красивую границу
     // let prefix = "> |".green().bold();
 
-    // for (label, value, color) in rsfetch {
+    // for (label, value, color) in noorfetch {
     //     // Выбираем ключ: либо иконка, либо текст с выравниванием (например, 5 символов)
     //     let key = format!("   {:<4}", label); // {:<4} выровняет модули (os, ram, cpu и прочее) по ширине.
 
