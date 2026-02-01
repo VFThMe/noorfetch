@@ -8,7 +8,7 @@
 
 ## Goals
 - [ ] Create configuration file
-- [ ] Create package in AUR
+- [x] Create package in AUR
 - [x] Create noorfetch installer
 - [x] Create initial ASCII art 
 
