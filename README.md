@@ -7,11 +7,7 @@
 ![RSFetch screenshot](https://codeberg.org/limforge/noorfetch/raw/branch/main/screenshots/noorfetch_screenshot.png)
 
 ## Goals
-- [ ] Create configuration file
-- [x] Create package in AUR
-- [x] Create noorfetch installer
-- [x] Create initial ASCII art 
-
+See GOALS.md file
 ## Installation
 ### Dependencies
 
