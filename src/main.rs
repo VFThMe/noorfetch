@@ -95,8 +95,8 @@ fn main() {
 	("wm/de ",   environment,                Color::TrueColor { r: 136, g: 57, b: 239 } ),    //      mauve 
 	("init ",    init,                       Color::TrueColor { r: 210, g: 15, b: 57  } ),   //       red
 	
-	("ram ",  format!("{}/{} MB", used_memory / 2048, total_memory / 2048), Color::TrueColor { r: 230, g: 69, b: 83, }),   // maroon
-	("swap ", format!("{}/{} MB", used_swap / 2048, total_swap / 2048),     Color::TrueColor { r: 254, g: 100, b: 11, } ), // peach
+	("ram ",  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048), Color::TrueColor { r: 230, g: 69, b: 83, }),   // maroon
+	("swap ", format!("{}/{} MB", used_swap / 1048 / 1048, total_swap / 1048 / 1048 ),     Color::TrueColor { r: 254, g: 100, b: 11, } ), // peach
 	("cpu ",  format!("{} ({})", cpu_brand, cpu),                           Color::TrueColor { r: 223, g: 142, b: 29, }),  // yellow
 	
 	("krnl ",    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }), // green
