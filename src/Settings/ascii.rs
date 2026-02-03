@@ -1,7 +1,7 @@
 // Создаем список ОС
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Distro {
-    Windows, MacOS, Ubuntu, Arch, Fedora, Debian, Gentoo, CachyOS,
+   /* Windows,*/ MacOS, Ubuntu, Arch, Fedora, Debian, Gentoo, CachyOS,
     EndeavourOS, Trisquel, NixOS, Bazzite, Manjaro, Artix, Void,
     ALT, Guix, Kali, OpenSUSE, Lubuntu, Xubuntu, Vanilla, Garuda,
     Deepin, Nobara, Tails, RedHat, Calculate, Devuan, CentOS,
@@ -15,7 +15,7 @@ impl Distro {
         // Список кортежей: (что ищем в строке, какой результат возвращаем)
         // Порядок важен: более специфичные названия (Lubuntu) ставим выше общих (Ubuntu)
         const RULES: &[(&str, Distro)] = &[
-            ("windows", Distro::Windows),
+ //           ("windows", Distro::Windows),
             ("darwin", Distro::MacOS),
             ("macos", Distro::MacOS),
             ("lubuntu", Distro::Lubuntu),
@@ -65,7 +65,7 @@ impl Distro {
 // Возвращаем ASCII арт для каждого дистрибутива
 pub fn ascii_art(&self) -> &'static str {
         match self {
-            Distro::Windows => r#"/////////////////  /////////////////
+           /* Distro::Windows => r#"/////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////
@@ -81,7 +81,7 @@ pub fn ascii_art(&self) -> &'static str {
 /////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////
-/////////////////  /////////////////"#,
+/////////////////  /////////////////"#,*/
             Distro::MacOS => r#"        .:'
     __ :'__
  .'`  `-'  ``.

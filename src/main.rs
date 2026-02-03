@@ -13,6 +13,8 @@ use ascii::Distro;
 #[path = "Settings/environment.rs"]
 mod environment;
 use environment::get_wm;
+#[path = "Settings/date.rs"]
+mod date;
 // #[path = "Settings/config.rs"]
 // mod config;
 fn main() {
@@ -26,9 +28,7 @@ fn main() {
     // let is_legacy = args.iter().any(|arg| arg == "--legacy" || arg == "-l");
 
     // Identifying OS. Определяем ОС
-    let os = if cfg!(target_os = "windows") {
-        format!("Windows {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "linux") {
+    let os = if  cfg!(target_os = "linux") {
         OsRelease::new().ok().and_then(|r| Some(r.pretty_name)).unwrap_or("Linux".to_string())
     } else if cfg!(target_os = "macos") {
         format!("macOS {}", System::os_version().unwrap_or("Unknown".to_string()))
@@ -60,6 +60,7 @@ fn main() {
     let used_swap     =       sys.used_swap();
     let cpu           =       sys.cpus().len();
     let target_proc   =       1;
+    let days          =       date::get_install_days();
     let environment   = if cfg!(target_os = "windows") {
 	format!("Explorer DE")
     } else if cfg!(target_os = "macos") {
@@ -100,6 +101,7 @@ fn main() {
 	("cpu ",  format!("{} ({})", cpu_brand, cpu),                           Color::TrueColor { r: 223, g: 142, b: 29, }),  // yellow
 	
 	("krnl ",    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }), // green
+	("days ",    days,                       Color::TrueColor { r: 23, g: 146, b: 153, })        //  
     ];
     
     // Create another vector. Создаем еще один вектор
@@ -131,7 +133,6 @@ for i in 0..max_l {
 
         println!("{:<width$} {}", art_row, info_row, width = padding);
     }
-
     // Print ASCII art at the top, defining it in the file ascii.rs. Печатаем ASCII-арт сверху, определив его в файле ascii.rs
    // println!("{}", art.cyan().bold());
    // println!("{}", "—".repeat(70).dimmed());

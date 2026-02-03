@@ -62,7 +62,8 @@ noorfetch
 noorfetch is distributed under the **GNU General Public License v3.0 or later**.
 
 This project incorporates the following Rust libraries (crates):
-* [sysinfo-0.37.2](https://crates.io/crates/sysinfo) — MIT License
-* [whoami-v2.1.0](https://crates.io/crates/whoami) — Apache-2.0, BSL-1.0, or MIT License
-* [colored-3.1.1](https://crates.io/crates/colored) — MPL-2.0 License
-* [os-release-0.1.0](https://crates.io/crates/os-release) — MIT License
+* [sysinfo-0.37.2](https://crates.io/crates/sysinfo) - MIT License
+* [whoami-v2.1.0](https://crates.io/crates/whoami) - Apache-2.0, BSL-1.0, or MIT License
+* [colored-3.1.1](https://crates.io/crates/colored) - MPL-2.0 License
+* [os-release-0.1.0](https://crates.io/crates/os-release) - MIT License
+* [chrono-0.4.43](https://crates.io/crates/chrono) - Apache-2.0 or MIT License
