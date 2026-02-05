@@ -59,7 +59,7 @@ fn main() {
     let total_swap    =       sys.total_swap();
     let used_swap     =       sys.used_swap();
     let cpu           =       sys.cpus().len();
-    let target_proc   =       1;
+//    let target_proc   =       1;
     let days          =       date::get_install_days();
     let environment   = if cfg!(target_os = "windows") {
 	format!("Explorer DE")
@@ -79,11 +79,11 @@ fn main() {
     } else { 
         System::kernel_version().unwrap_or("Unknown".to_string())
     };
-    let init = if let Some(process) = sys.process(Pid::from(target_proc)) {
+/*    let init = if let Some(process) = sys.process(Pid::from(target_proc)) {
         process.name().to_string_lossy().into_owned()
     } else {
         "Unknown".to_string()
-    };
+    }; */
 
     // Check icon support and the presence of the --legacy or -l flag. Проверяем наличие значков и наличие флага --legacy или -l.
     // let use_icons = font_detector::nerd_font() && !is_legacy;
@@ -94,7 +94,7 @@ fn main() {
 	("user ",    username.clone(),           Color::TrueColor { r: 221, g: 120, b: 120 } ),     //    flamingo
 	("host ",    hostname.clone(),           Color::TrueColor { r: 234, g: 118, b: 203, } ),   //     pink 
 	("wm/de ",   environment,                Color::TrueColor { r: 136, g: 57, b: 239 } ),    //      mauve 
-	("init ",    init,                       Color::TrueColor { r: 210, g: 15, b: 57  } ),   //       red
+//	("init ",    init,                       Color::TrueColor { r: 210, g: 15, b: 57  } ),   //       red
 	
 	("ram ",  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048), Color::TrueColor { r: 230, g: 69, b: 83, }),   // maroon
 	("swap ", format!("{}/{} MB", used_swap / 1048 / 1048, total_swap / 1048 / 1048 ),     Color::TrueColor { r: 254, g: 100, b: 11, } ), // peach
