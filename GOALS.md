@@ -1,5 +1,5 @@
 # Goals
-- [ ] Display the creation date of the OS
+- [x] Display the creation date of the OS
 - [ ] Create a colour for ASCII art
 - [ ] Create configuration file
 - [x] Create package in AUR
