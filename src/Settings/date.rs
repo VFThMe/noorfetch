@@ -1,0 +1,19 @@
+use std::fs;
+use std::time::SystemTime;
+
+pub fn get_install_days() -> String {
+    let target_path = "/etc"; 
+
+    if let Ok(metadata) = fs::metadata(target_path) {
+        let install_time = metadata.created()
+            .or_else(|_| metadata.modified())
+            .unwrap_or_else(|_| SystemTime::now());
+
+        if let Ok(duration) = SystemTime::now().duration_since(install_time) {
+            let days = duration.as_secs() / 86400;
+            return format!("{} days", days);
+        }
+    }
+    
+    "unknown".to_string()
+}

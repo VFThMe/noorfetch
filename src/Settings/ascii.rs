@@ -1,89 +1,71 @@
 // Создаем список ОС
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Distro {
-    Windows,
-    MacOS,
-    Ubuntu,
-    Arch,
-    Fedora,
-    Debian,
-    Gentoo,
-    CachyOS,
-    EndeavourOS,
-    Trisquel,
-    NixOS,
-    Bazzite,
-    Manjaro,
-    Artix,
-    Void,
-    ALT,
-    Guix,
-    Kali,
-    OpenSUSE,
-    Lubuntu,
-    Xubuntu,
-    Vanilla,
-    Garuda,
-    Deepin,
-    Nobara,
-    Tails,
-    RedHat,
-    Calculate,
-    Devuan,
-    CentOS,
-    ElementaryOS,
-    PopOS,
-    FreeBSD,
-    NetBSD,
-    OpenBSD,
-    Unknown,
+   /* Windows,*/ MacOS, Ubuntu, Arch, Fedora, Debian, Gentoo, CachyOS,
+    EndeavourOS, Trisquel, NixOS, Bazzite, Manjaro, Artix, Void,
+    ALT, Guix, Kali, OpenSUSE, Lubuntu, Xubuntu, Vanilla, Garuda,
+    Deepin, Nobara, Tails, RedHat, Calculate, Devuan, CentOS,
+    ElementaryOS, PopOS, FreeBSD, NetBSD, OpenBSD, Unknown,
 }
 
 impl Distro {
     pub fn from_string(name: &str) -> Self {
-        // Преобразуем строку в нижний регистр и ищем совпадения с известными дистрибутивами. Если совпадений нет, возвращаем Unknown
         let name = name.to_lowercase();
-        if name.contains("ubuntu") { return Distro::Ubuntu; }
-        if name.contains("arch") { return Distro::Arch; }
-        if name.contains("fedora") { return Distro::Fedora; }
-        if name.contains("debian") { return Distro::Debian; }
-        if name.contains("gentoo") { return Distro::Gentoo; }
-        if name.contains("cachyos") { return Distro::CachyOS; }
-        if name.contains("windows") { return Distro::Windows; }
-        if name.contains("endeavouros") { return Distro::EndeavourOS; }
-        if name.contains("trisquel") { return Distro::Trisquel; }
-        if name.contains("nixos") { return Distro::NixOS; }
-        if name.contains("bazzite") { return Distro::Bazzite; }
-        if name.contains("manjaro") { return Distro::Manjaro; }
-        if name.contains("artix") { return Distro::Artix; }
-        if name.contains("void") { return Distro::Void; }
-        if name.contains("alt") { return Distro::ALT; }
-        if name.contains("guix") { return Distro::Guix; }
-        if name.contains("kali") { return Distro::Kali; }
-        if name.contains("opensuse") { return Distro::OpenSUSE; }
-        if name.contains("lubuntu") { return Distro::Lubuntu; }
-        if name.contains("xubuntu") { return Distro::Xubuntu; }
-        if name.contains("vanilla") || name.contains("vanillaos") { return Distro::Vanilla; }
-        if name.contains("garuda") { return Distro::Garuda; }
-        if name.contains("nobara") { return Distro::Nobara; }
-        if name.contains("tails") { return Distro::Tails; }
-        if name.contains("rhel") || name.contains("red hat enterprise linux") { return Distro::RedHat; }
-        if name.contains("calculate") { return Distro::Calculate; }
-        if name.contains("centos") { return Distro::CentOS; }
-        if name.contains("devuan") { return Distro::Devuan; }
-        if name.contains("deepin") { return Distro::Deepin; }
-        if name.contains("freebsd") { return Distro::FreeBSD; }
-        if name.contains("netbsd") { return Distro::NetBSD; }
-        if name.contains("openbsd") { return Distro::OpenBSD; }
-        if name.contains("elementary") || name.contains("elementaryos") { return Distro::ElementaryOS; }
-        if name.contains("popos") || name.contains("pop os") || name.contains("pop_os!") || name.contains("pop_os") { return Distro::PopOS; }
-        if name.contains("darwin") || name.contains("macos") { return Distro::MacOS; }
-        Distro::Unknown
-    }
-    
+
+        // Список кортежей: (что ищем в строке, какой результат возвращаем)
+        // Порядок важен: более специфичные названия (Lubuntu) ставим выше общих (Ubuntu)
+        const RULES: &[(&str, Distro)] = &[
+ //           ("windows", Distro::Windows),
+            ("darwin", Distro::MacOS),
+            ("macos", Distro::MacOS),
+            ("lubuntu", Distro::Lubuntu),
+            ("xubuntu", Distro::Xubuntu),
+            ("ubuntu", Distro::Ubuntu),
+            ("arch", Distro::Arch),
+            ("fedora", Distro::Fedora),
+            ("debian", Distro::Debian),
+            ("gentoo", Distro::Gentoo),
+            ("cachyos", Distro::CachyOS),
+            ("endeavouros", Distro::EndeavourOS),
+            ("trisquel", Distro::Trisquel),
+            ("nixos", Distro::NixOS),
+            ("bazzite", Distro::Bazzite),
+            ("manjaro", Distro::Manjaro),
+            ("artix", Distro::Artix),
+            ("void", Distro::Void),
+            ("alt linux", Distro::ALT),
+            ("guix", Distro::Guix),
+            ("kali", Distro::Kali),
+            ("opensuse", Distro::OpenSUSE),
+            ("vanilla", Distro::Vanilla),
+            ("garuda", Distro::Garuda),
+            ("deepin", Distro::Deepin),
+            ("nobara", Distro::Nobara),
+            ("tails", Distro::Tails),
+            ("rhel", Distro::RedHat),
+            ("red hat", Distro::RedHat),
+            ("calculate", Distro::Calculate),
+            ("devuan", Distro::Devuan),
+            ("centos", Distro::CentOS),
+            ("elementary", Distro::ElementaryOS),
+            ("pop_os", Distro::PopOS),
+            ("popos", Distro::PopOS),
+            ("pop os", Distro::PopOS),
+            ("freebsd", Distro::FreeBSD),
+            ("netbsd", Distro::NetBSD),
+            ("openbsd", Distro::OpenBSD),
+        ];
+
+        // Ищем первое совпадение
+        RULES.iter()
+            .find(|(key, _)| name.contains(key))
+            .map(|(_, distro)| *distro)
+            .unwrap_or(Distro::Unknown)
+    }    
 // Возвращаем ASCII арт для каждого дистрибутива
 pub fn ascii_art(&self) -> &'static str {
         match self {
-            Distro::Windows => r#"/////////////////  /////////////////
+           /* Distro::Windows => r#"/////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////
@@ -99,7 +81,7 @@ pub fn ascii_art(&self) -> &'static str {
 /////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////
-/////////////////  /////////////////"#,
+/////////////////  /////////////////"#,*/
             Distro::MacOS => r#"        .:'
     __ :'__
  .'`  `-'  ``.
