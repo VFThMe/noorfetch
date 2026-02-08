@@ -34,7 +34,7 @@ paru -Syu noorfetch
 ```
 
 ### Run the installer
-**Run** ``installer_linux.sh``. **Warning**: This script only supports Arch, Gentoo, Ubuntu, and Debian. Using other operating systems will result in an error.
+**Run** ``installer_unix.sh``.
 
 ### Build from source
 

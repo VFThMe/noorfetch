@@ -73,7 +73,7 @@ if [[ ! -f "Cargo.toml" ]]; then
     die "Cargo.toml not found in $PROJECT_DIR. Run the script from the project folder!"
 fi
 
-cargo build --release || die "Error in building!"
+RUSTFLAGS="-C target-cpu=native" cargo build --release || die "Error in building!"
 
 # root request
 log "Requesting root privileges to copy a file to the system..."

@@ -2,7 +2,7 @@ use sysinfo::*;
 use whoami;
 use colored::*;
 use os_release::OsRelease;
-use std;
+use std::*;
 
 // Подключаем сторонние файлы из директории UX
 // #[path = "Settings/detect_icons.rs"]
@@ -15,17 +15,17 @@ mod environment;
 use environment::get_wm;
 #[path = "Settings/date.rs"]
 mod date;
-// #[path = "Settings/config.rs"]
-// mod config;
+#[path = "Settings/config.rs"]
+mod config;
+// use config::load_config;
+
 fn main() {
-    // let cfg = config::load_config();
-
-    // let path = config::get_path();
-    // println!("Файл конфига находится тут: {:?}", path);
-
+    // Config. Конфигурационный файл
+    let cfg = config::load_config();
+    
     // Создаем вектор аргументов командной строки и проверяем наличие флага --legacy или -l
-    // let args: Vec<String> = env::args().collect();
-    // let is_legacy = args.iter().any(|arg| arg == "--legacy" || arg == "-l");
+    let args: Vec<String> = env::args().collect();
+    let no_color = args.iter().any(|arg| arg == "--no-color" || arg == "-nc");
 
     // Identifying OS. Определяем ОС
     let os = if  cfg!(target_os = "linux") {
@@ -33,11 +33,11 @@ fn main() {
     } else if cfg!(target_os = "macos") {
         format!("macOS {}", System::os_version().unwrap_or("Unknown".to_string()))
     } else if cfg!(target_os = "freebsd") {
-        format!("NetBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "netbsd") {
-        format!("OpenBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "openbsd") {
         format!("FreeBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
+    } else if cfg!(target_os = "netbsd") {
+        format!("NetBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
+    } else if cfg!(target_os = "openbsd") {
+        format!("OpenBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
     } else {
         "Unknown".to_string()
     };
@@ -85,67 +85,80 @@ fn main() {
         "Unknown".to_string()
     }; */
 
-    // Check icon support and the presence of the --legacy or -l flag. Проверяем наличие значков и наличие флага --legacy или -l.
-    // let use_icons = font_detector::nerd_font() && !is_legacy;
-
-    // Create a vector where we specify each module of our fetch. Создаем вектор где указываем каждый модуль нашего фетча
-    let noorfetch = vec![
-	("os ",      os.clone(),                 Color::TrueColor { r: 220, g: 138, b: 120 } ),      //   rosewater
-	("user ",    username.clone(),           Color::TrueColor { r: 221, g: 120, b: 120 } ),     //    flamingo
-	("host ",    hostname.clone(),           Color::TrueColor { r: 234, g: 118, b: 203, } ),   //     pink 
-	("wm/de ",   environment,                Color::TrueColor { r: 136, g: 57, b: 239 } ),    //      mauve 
-//	("init ",    init,                       Color::TrueColor { r: 210, g: 15, b: 57  } ),   //       red
-
-	("ram ",  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048), Color::TrueColor { r: 230, g: 69, b: 83, }),   // maroon
-	("swap ", format!("{}/{} MB", used_swap / 1048 / 1048, total_swap / 1048 / 1048 ),     Color::TrueColor { r: 254, g: 100, b: 11, } ), // peach
-
-	("cpu ",  format!("{} ({})", cpu_brand, cpu),                           Color::TrueColor { r: 223, g: 142, b: 29, }),  // yellow
-	
-	("krnl ",    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }), // green
-	("days ",    days,                       Color::TrueColor { r: 23, g: 146, b: 153, })        //  
-    ];
+    // Check icon support and the presence of the --no-color or -nc flag. Проверяем наличие флага --no-color или -nc.
+    let use_color = !no_color;
     
-    // Create another vector. Создаем еще один вектор
-    let mut info_lines: Vec<String> = Vec::new();
+let mut noorfetch: Vec<(String, String, Color)> = Vec::new();
+
+let add_if_enabled = |noorfetch: &mut Vec<(String, String, Color)>, key: &str, label: &str, value: String, color: Color| {
+    if cfg.modules.get(key).map_or(true, |m| m.display) {
+        noorfetch.push((label.to_string(), value, color));
+    }
+};
+
+add_if_enabled(&mut noorfetch, "os", "os ", os.clone(), Color::TrueColor { r: 220, g: 138, b: 120 });
+
+add_if_enabled(&mut noorfetch, "user", "user ", username.clone(), Color::TrueColor { r: 221, g: 120, b: 120 });
+
+add_if_enabled(&mut noorfetch, "hostname", "host ", hostname.clone(), Color::TrueColor { r: 234, g: 118, b: 203 });
+
+add_if_enabled(&mut noorfetch, "wm", "wm/de ", environment.clone(), Color::TrueColor { r: 136, g: 57, b: 239 });
+
+add_if_enabled(
+    &mut noorfetch,
+    "ram",
+    "ram ",
+    format!("{}/{} MiB", used_memory / 1024 / 1024, total_memory / 1024 / 1024),
+    Color::TrueColor { r: 230, g: 69, b: 83 },
+);
+    if used_swap > 0 && cfg.modules.get("swap").map_or(true, |m| m.display) {
+	noorfetch.push((
+        "swap ".to_string(),
+        format!("{}/{} MiB", used_swap / 1024 / 1024, total_swap / 1024 / 1024),
+        Color::TrueColor { r: 254, g: 100, b: 11 },
+    ));
+}
+
+    add_if_enabled(
+	&mut noorfetch,
+	"cpu",
+	"cpu ",
+	format!("{} ({})", cpu_brand, cpu),
+	Color::TrueColor { r: 223, g: 142, b: 29 },
+);
+
+
+    add_if_enabled(&mut noorfetch, "krnl", "krnl ", kernel.clone(), Color::TrueColor { r: 64, g: 160, b: 43 });
+
+    if days != "Unknown".to_lowercase() && days != "0" {
+	add_if_enabled(&mut noorfetch, "days", "days ", days.clone(), Color::TrueColor { r: 23, g: 146, b: 153 });
+    }
     
-    // Header (user@host). Заголовок (user@host)
+let mut info_lines: Vec<String> = Vec::new();
+
     info_lines.push(format!("{}@{}", username, hostname));
     info_lines.push("-".repeat(username.len() + hostname.len() + 1));
 
-    for (label, value, color) in noorfetch {
-        info_lines.push(format!("{:<6} {}", label.color(color).bold(), value));
+    if use_color {
+        for (label, value, color) in noorfetch {
+            info_lines.push(format!("{:<6} {}", label.color(color).bold(), value));
+        }
+    } else {
+        for (label, value, _) in noorfetch {
+            info_lines.push(format!("{:<6} {}", label.bold(), value));
+        }
     }
 
     let art_lines: Vec<&str> = art.lines().collect();
     let art_width = art_lines.iter().map(|l| l.len()).max().unwrap_or(0);
-    let padding = art_width + 5; 
+    let padding = art_width + 5;
 
-    // Print. Вывод
     let max_l = std::cmp::max(art_lines.len(), info_lines.len());
 
     println!();
-for i in 0..max_l {
+    for i in 0..max_l {
         let art_row = art_lines.get(i).unwrap_or(&"");
-        
-        let info_row = match info_lines.get(i) {
-            Some(row) => row.as_str(),
-            None => "",
-        };
-
+        let info_row = info_lines.get(i).map_or("", |s| s.as_str());
         println!("{:<width$} {}", art_row, info_row, width = padding);
     }
-    // Print ASCII art at the top, defining it in the file ascii.rs. Печатаем ASCII-арт сверху, определив его в файле ascii.rs
-   // println!("{}", art.cyan().bold());
-   // println!("{}", "—".repeat(70).dimmed());
-
-    // Printing a pretty border. Печатаем красивую границу
-    // let prefix = "> |".green().bold();
-
-    // for (label, value, color) in noorfetch {
-    //     // Выбираем ключ: либо иконка, либо текст с выравниванием (например, 5 символов)
-    //     let key = format!("   {:<4}", label); // {:<4} выровняет модули (os, ram, cpu и прочее) по ширине.
-
-    // println!("{} {} {}", prefix, key.color(color).bold(), value);
-    // Displaying the program version and license
-    // println!("{}  {}", "©".cyan(), format!("Noorfetch v{} | GNU GPLv3 License | 2026", env!("CARGO_PKG_VERSION")).dimmed());
 }
