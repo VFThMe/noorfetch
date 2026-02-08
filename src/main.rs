@@ -2,7 +2,7 @@ use sysinfo::*;
 use whoami;
 use colored::*;
 use os_release::OsRelease;
-use std;
+use std::*;
 
 // Подключаем сторонние файлы из директории UX
 // #[path = "Settings/detect_icons.rs"]
@@ -24,8 +24,8 @@ fn main() {
     // println!("Файл конфига находится тут: {:?}", path);
 
     // Создаем вектор аргументов командной строки и проверяем наличие флага --legacy или -l
-    // let args: Vec<String> = env::args().collect();
-    // let is_legacy = args.iter().any(|arg| arg == "--legacy" || arg == "-l");
+    let args: Vec<String> = env::args().collect();
+    let no_color = args.iter().any(|arg| arg == "--no-color" || arg == "-nc");
 
     // Identifying OS. Определяем ОС
     let os = if  cfg!(target_os = "linux") {
@@ -85,10 +85,11 @@ fn main() {
         "Unknown".to_string()
     }; */
 
-    // Check icon support and the presence of the --legacy or -l flag. Проверяем наличие значков и наличие флага --legacy или -l.
-    // let use_icons = font_detector::nerd_font() && !is_legacy;
+    // Check icon support and the presence of the --no-color or -nc flag. Проверяем наличие флага --no-color или -nc.
+    let use_color = !no_color;
 
     // Create a vector where we specify each module of our fetch. Создаем вектор где указываем каждый модуль нашего фетча
+    if use_color == true {
     let noorfetch = vec![
 	("os ",      os.clone(),                 Color::TrueColor { r: 220, g: 138, b: 120 } ),      //   rosewater
 	("user ",    username.clone(),           Color::TrueColor { r: 221, g: 120, b: 120 } ),     //    flamingo
@@ -103,7 +104,7 @@ fn main() {
 	("krnl ",    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }), // green
 	("days ",    days,                       Color::TrueColor { r: 23, g: 146, b: 153, })        //  
     ];
-    
+	
     // Create another vector. Создаем еще один вектор
     let mut info_lines: Vec<String> = Vec::new();
     
@@ -132,6 +133,52 @@ for i in 0..max_l {
         };
 
         println!("{:<width$} {}", art_row, info_row, width = padding);
+    }
+    } else {
+    let noorfetch = vec![
+	("os ",      os.clone(),                 ),      //   rosewater
+	("user ",    username.clone(),           ),     //    flamingo
+	("host ",    hostname.clone(),           ),   //     pink 
+	("wm/de ",   environment,                ),    //      mauve 
+//	("init ",    init,                       ),   //       red
+	
+	("ram ",  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048)),   // maroon
+	("swap ", format!("{}/{} MB", used_swap / 1048 / 1048, total_swap / 1048 / 1048 )), // peach
+	("cpu ",  format!("{} ({})", cpu_brand, cpu),                           ),  // yellow
+	
+	("krnl ",    kernel,                     ), // green
+	("days ",    days,                       )        //  
+    ];
+        
+    // Create another vector. Создаем еще один вектор
+    let mut info_lines: Vec<String> = Vec::new();
+    
+    // Header (user@host). Заголовок (user@host)
+    info_lines.push(format!("{}@{}", username, hostname));
+    info_lines.push("-".repeat(username.len() + hostname.len() + 1));
+
+    for (label, value) in noorfetch {
+        info_lines.push(format!("{:<6} {}", label.bold(), value));
+    }
+
+    let art_lines: Vec<&str> = art.lines().collect();
+    let art_width = art_lines.iter().map(|l| l.len()).max().unwrap_or(0);
+    let padding = art_width + 5; 
+
+    // Print. Вывод
+    let max_l = std::cmp::max(art_lines.len(), info_lines.len());
+
+    println!();
+for i in 0..max_l {
+        let art_row = art_lines.get(i).unwrap_or(&"");
+        
+        let info_row = match info_lines.get(i) {
+            Some(row) => row.as_str(),
+            None => "",
+        };
+
+        println!("{:<width$} {}", art_row, info_row, width = padding);
+    }
     }
     // Print ASCII art at the top, defining it in the file ascii.rs. Печатаем ASCII-арт сверху, определив его в файле ascii.rs
    // println!("{}", art.cyan().bold());
