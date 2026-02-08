@@ -88,23 +88,26 @@ fn main() {
     // Check icon support and the presence of the --no-color or -nc flag. Проверяем наличие флага --no-color или -nc.
     let use_color = !no_color;
 
-    // Create a vector where we specify each module of our fetch. Создаем вектор где указываем каждый модуль нашего фетча
-    if use_color == true {
-    let noorfetch = vec![
-	("os ",      os.clone(),                 Color::TrueColor { r: 220, g: 138, b: 120 } ),      //   rosewater
-	("user ",    username.clone(),           Color::TrueColor { r: 221, g: 120, b: 120 } ),     //    flamingo
-	("host ",    hostname.clone(),           Color::TrueColor { r: 234, g: 118, b: 203, } ),   //     pink 
-	("wm/de ",   environment,                Color::TrueColor { r: 136, g: 57, b: 239 } ),    //      mauve 
-//	("init ",    init,                       Color::TrueColor { r: 210, g: 15, b: 57  } ),   //       red
-	
-	("ram ",  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048), Color::TrueColor { r: 230, g: 69, b: 83, }),   // maroon
-	("swap ", format!("{}/{} MB", used_swap / 1048 / 1048, total_swap / 1048 / 1048 ),     Color::TrueColor { r: 254, g: 100, b: 11, } ), // peach
-	("cpu ",  format!("{} ({})", cpu_brand, cpu),                           Color::TrueColor { r: 223, g: 142, b: 29, }),  // yellow
-	
-	("krnl ",    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }), // green
-	("days ",    days,                       Color::TrueColor { r: 23, g: 146, b: 153, })        //  
-    ];
-	
+    let mut noorfetch = Vec::new();
+	noorfetch.push(( "os ".to_string(),      os.clone(),       Color::TrueColor { r: 220, g: 138, b: 120  }  ));
+        noorfetch.push(( "user ".to_string(),    username.clone(), Color::TrueColor { r: 221, g: 120, b: 120  }  ));
+        noorfetch.push(( "host ".to_string(),    hostname.clone(), Color::TrueColor { r: 234, g: 118, b: 203 }   ));
+        noorfetch.push(( "wm/de ".to_string(),   environment,      Color::TrueColor { r: 136, g: 57,  b: 239  }  ));
+    
+    	noorfetch.push(("ram ".to_string(),  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048), Color::TrueColor { r: 230, g: 69, b: 83, }));
+        if used_swap > 0 {
+	    noorfetch.push((
+	    "swap ".to_string(), format!("{}/{} MB",
+	    used_swap / 1048 / 1048,
+	    total_swap / 1048 / 1048 ),
+	    Color::TrueColor { r: 254, g: 100, b: 11, } )); // peach
+        } else {}
+        noorfetch.push((  "cpu ".to_string(),     format!("{} ({})", cpu_brand, cpu),  Color::TrueColor { r: 223, g: 142, b: 29, }));
+        noorfetch.push((  "krnl ".to_string(),    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }));
+    if days != "Unknown".to_lowercase() && days != "0" {
+        noorfetch.push(( "days ".to_string(),    days,                       Color::TrueColor { r: 23, g: 146, b: 153, }));
+} else {}
+            
     // Create another vector. Создаем еще один вектор
     let mut info_lines: Vec<String> = Vec::new();
     
@@ -112,53 +115,14 @@ fn main() {
     info_lines.push(format!("{}@{}", username, hostname));
     info_lines.push("-".repeat(username.len() + hostname.len() + 1));
 
-    for (label, value, color) in noorfetch {
-        info_lines.push(format!("{:<6} {}", label.color(color).bold(), value));
-    }
-
-    let art_lines: Vec<&str> = art.lines().collect();
-    let art_width = art_lines.iter().map(|l| l.len()).max().unwrap_or(0);
-    let padding = art_width + 5; 
-
-    // Print. Вывод
-    let max_l = std::cmp::max(art_lines.len(), info_lines.len());
-
-    println!();
-for i in 0..max_l {
-        let art_row = art_lines.get(i).unwrap_or(&"");
-        
-        let info_row = match info_lines.get(i) {
-            Some(row) => row.as_str(),
-            None => "",
-        };
-
-        println!("{:<width$} {}", art_row, info_row, width = padding);
-    }
+    if use_color { 
+	for (label, value, color) in noorfetch {
+            info_lines.push(format!("{:<6} {}", label.color(color).bold(), value))
+	}
     } else {
-    let noorfetch = vec![
-	("os ",      os.clone(),                 ),      //   rosewater
-	("user ",    username.clone(),           ),     //    flamingo
-	("host ",    hostname.clone(),           ),   //     pink 
-	("wm/de ",   environment,                ),    //      mauve 
-//	("init ",    init,                       ),   //       red
-	
-	("ram ",  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048)),   // maroon
-	("swap ", format!("{}/{} MB", used_swap / 1048 / 1048, total_swap / 1048 / 1048 )), // peach
-	("cpu ",  format!("{} ({})", cpu_brand, cpu),                           ),  // yellow
-	
-	("krnl ",    kernel,                     ), // green
-	("days ",    days,                       )        //  
-    ];
-        
-    // Create another vector. Создаем еще один вектор
-    let mut info_lines: Vec<String> = Vec::new();
-    
-    // Header (user@host). Заголовок (user@host)
-    info_lines.push(format!("{}@{}", username, hostname));
-    info_lines.push("-".repeat(username.len() + hostname.len() + 1));
-
-    for (label, value) in noorfetch {
-        info_lines.push(format!("{:<6} {}", label.bold(), value));
+	for (label, value, _color) in noorfetch {
+	    info_lines.push(format!("{:<6} {}", label.bold(), value))
+	}
     }
 
     let art_lines: Vec<&str> = art.lines().collect();
@@ -169,7 +133,7 @@ for i in 0..max_l {
     let max_l = std::cmp::max(art_lines.len(), info_lines.len());
 
     println!();
-for i in 0..max_l {
+    for i in 0..max_l {
         let art_row = art_lines.get(i).unwrap_or(&"");
         
         let info_row = match info_lines.get(i) {
@@ -179,19 +143,4 @@ for i in 0..max_l {
 
         println!("{:<width$} {}", art_row, info_row, width = padding);
     }
-    }
-    // Print ASCII art at the top, defining it in the file ascii.rs. Печатаем ASCII-арт сверху, определив его в файле ascii.rs
-   // println!("{}", art.cyan().bold());
-   // println!("{}", "—".repeat(70).dimmed());
-
-    // Printing a pretty border. Печатаем красивую границу
-    // let prefix = "> |".green().bold();
-
-    // for (label, value, color) in noorfetch {
-    //     // Выбираем ключ: либо иконка, либо текст с выравниванием (например, 5 символов)
-    //     let key = format!("   {:<4}", label); // {:<4} выровняет модули (os, ram, cpu и прочее) по ширине.
-
-    // println!("{} {} {}", prefix, key.color(color).bold(), value);
-    // Displaying the program version and license
-    // println!("{}  {}", "©".cyan(), format!("Noorfetch v{} | GNU GPLv3 License | 2026", env!("CARGO_PKG_VERSION")).dimmed());
 }
