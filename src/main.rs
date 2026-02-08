@@ -33,11 +33,11 @@ fn main() {
     } else if cfg!(target_os = "macos") {
         format!("macOS {}", System::os_version().unwrap_or("Unknown".to_string()))
     } else if cfg!(target_os = "freebsd") {
-        format!("NetBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "netbsd") {
-        format!("OpenBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "openbsd") {
         format!("FreeBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
+    } else if cfg!(target_os = "netbsd") {
+        format!("NetBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
+    } else if cfg!(target_os = "openbsd") {
+        format!("OpenBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
     } else {
         "Unknown".to_string()
     };
