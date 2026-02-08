@@ -15,14 +15,14 @@ mod environment;
 use environment::get_wm;
 #[path = "Settings/date.rs"]
 mod date;
-// #[path = "Settings/config.rs"]
-// mod config;
+#[path = "Settings/config.rs"]
+mod config;
+// use config::load_config;
+
 fn main() {
-    // let cfg = config::load_config();
-
-    // let path = config::get_path();
-    // println!("Файл конфига находится тут: {:?}", path);
-
+    // Config. Конфигурационный файл
+    let cfg = config::load_config();
+    
     // Создаем вектор аргументов командной строки и проверяем наличие флага --legacy или -l
     let args: Vec<String> = env::args().collect();
     let no_color = args.iter().any(|arg| arg == "--no-color" || arg == "-nc");
@@ -88,59 +88,77 @@ fn main() {
     // Check icon support and the presence of the --no-color or -nc flag. Проверяем наличие флага --no-color или -nc.
     let use_color = !no_color;
 
-    let mut noorfetch = Vec::new();
-	noorfetch.push(( "os ".to_string(),      os.clone(),       Color::TrueColor { r: 220, g: 138, b: 120  }  ));
-        noorfetch.push(( "user ".to_string(),    username.clone(), Color::TrueColor { r: 221, g: 120, b: 120  }  ));
-        noorfetch.push(( "host ".to_string(),    hostname.clone(), Color::TrueColor { r: 234, g: 118, b: 203 }   ));
-        noorfetch.push(( "wm/de ".to_string(),   environment,      Color::TrueColor { r: 136, g: 57,  b: 239  }  ));
-    
-    	noorfetch.push(("ram ".to_string(),  format!("{}/{} MB", used_memory / 1048 / 1048, total_memory / 1048 / 1048), Color::TrueColor { r: 230, g: 69, b: 83, }));
-        if used_swap > 0 {
-	    noorfetch.push((
-	    "swap ".to_string(), format!("{}/{} MB",
-	    used_swap / 1048 / 1048,
-	    total_swap / 1048 / 1048 ),
-	    Color::TrueColor { r: 254, g: 100, b: 11, } )); // peach
-        } else {}
-        noorfetch.push((  "cpu ".to_string(),     format!("{} ({})", cpu_brand, cpu),  Color::TrueColor { r: 223, g: 142, b: 29, }));
-        noorfetch.push((  "krnl ".to_string(),    kernel,                     Color::TrueColor { r: 64, g: 160, b: 43, }));
+let mut noorfetch: Vec<(String, String, Color)> = Vec::new();
+
+let add_if_enabled = |noorfetch: &mut Vec<(String, String, Color)>, key: &str, label: &str, value: String, color: Color| {
+    if cfg.modules.get(key).map_or(true, |m| m.display) {
+        noorfetch.push((label.to_string(), value, color));
+    }
+};
+
+add_if_enabled(&mut noorfetch, "os", "os ", os.clone(), Color::TrueColor { r: 220, g: 138, b: 120 });
+
+add_if_enabled(&mut noorfetch, "user", "user ", username.clone(), Color::TrueColor { r: 221, g: 120, b: 120 });
+
+add_if_enabled(&mut noorfetch, "hostname", "host ", hostname.clone(), Color::TrueColor { r: 234, g: 118, b: 203 });
+
+add_if_enabled(&mut noorfetch, "wm", "wm/de ", environment.clone(), Color::TrueColor { r: 136, g: 57, b: 239 });
+
+add_if_enabled(
+    &mut noorfetch,
+    "ram",
+    "ram ",
+    format!("{}/{} MiB", used_memory / 1024 / 1024, total_memory / 1024 / 1024),
+    Color::TrueColor { r: 230, g: 69, b: 83 },
+);
+    if used_swap > 0 && cfg.modules.get("swap").map_or(true, |m| m.display) {
+	noorfetch.push((
+        "swap ".to_string(),
+        format!("{}/{} MiB", used_swap / 1024 / 1024, total_swap / 1024 / 1024),
+        Color::TrueColor { r: 254, g: 100, b: 11 },
+    ));
+}
+
+    add_if_enabled(
+	&mut noorfetch,
+	"cpu",
+	"cpu ",
+	format!("{} ({})", cpu_brand, cpu),
+	Color::TrueColor { r: 223, g: 142, b: 29 },
+);
+
+
+    add_if_enabled(&mut noorfetch, "krnl", "krnl ", kernel.clone(), Color::TrueColor { r: 64, g: 160, b: 43 });
+
     if days != "Unknown".to_lowercase() && days != "0" {
-        noorfetch.push(( "days ".to_string(),    days,                       Color::TrueColor { r: 23, g: 146, b: 153, }));
-} else {}
-            
-    // Create another vector. Создаем еще один вектор
-    let mut info_lines: Vec<String> = Vec::new();
+	add_if_enabled(&mut noorfetch, "days", "days ", days.clone(), Color::TrueColor { r: 23, g: 146, b: 153 });
+    }
     
-    // Header (user@host). Заголовок (user@host)
+let mut info_lines: Vec<String> = Vec::new();
+
     info_lines.push(format!("{}@{}", username, hostname));
     info_lines.push("-".repeat(username.len() + hostname.len() + 1));
 
-    if use_color { 
-	for (label, value, color) in noorfetch {
-            info_lines.push(format!("{:<6} {}", label.color(color).bold(), value))
-	}
+    if use_color {
+        for (label, value, color) in noorfetch {
+            info_lines.push(format!("{:<6} {}", label.color(color).bold(), value));
+        }
     } else {
-	for (label, value, _color) in noorfetch {
-	    info_lines.push(format!("{:<6} {}", label.bold(), value))
-	}
+        for (label, value, _) in noorfetch {
+            info_lines.push(format!("{:<6} {}", label.bold(), value));
+        }
     }
 
     let art_lines: Vec<&str> = art.lines().collect();
     let art_width = art_lines.iter().map(|l| l.len()).max().unwrap_or(0);
-    let padding = art_width + 5; 
+    let padding = art_width + 5;
 
-    // Print. Вывод
     let max_l = std::cmp::max(art_lines.len(), info_lines.len());
 
     println!();
     for i in 0..max_l {
         let art_row = art_lines.get(i).unwrap_or(&"");
-        
-        let info_row = match info_lines.get(i) {
-            Some(row) => row.as_str(),
-            None => "",
-        };
-
+        let info_row = info_lines.get(i).map_or("", |s| s.as_str());
         println!("{:<width$} {}", art_row, info_row, width = padding);
     }
 }
