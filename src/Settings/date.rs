@@ -2,7 +2,7 @@ use std::fs;
 use std::time::SystemTime;
 
 pub fn get_install_days() -> String {
-    let target_path = "/etc"; 
+    let target_path = "/usr/"; 
 
     if let Ok(metadata) = fs::metadata(target_path) {
         let install_time = metadata.created()

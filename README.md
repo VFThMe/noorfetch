@@ -1,17 +1,13 @@
 # Noorfetch
 
-![Static Badge](https://img.shields.io/badge/release-0.3.7-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
+![Static Badge](https://img.shields.io/badge/release-1.6.10-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
 
 **Noorfetch** (arab. نور) a minimalistic and fast summary of information about your computer, written in Rust!
 
 ![RSFetch screenshot](https://codeberg.org/limforge/noorfetch/raw/branch/main/screenshots/noorfetch_screenshot.png)
 
 ## Goals
-- [ ] Create configuration file
-- [x] Create package in AUR
-- [x] Create noorfetch installer
-- [x] Create initial ASCII art 
-
+See GOALS.md file
 ## Installation
 ### Dependencies
 
