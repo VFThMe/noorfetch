@@ -26,6 +26,11 @@ fn main() {
     // Создаем вектор аргументов командной строки и проверяем наличие флага --legacy или -l
     let args: Vec<String> = env::args().collect();
     let no_color = args.iter().any(|arg| arg == "--no-color" || arg == "-nc");
+    
+    if args.len() > 1 && (args[2] == "--help" || args[2] == "-h") {
+        help_program();
+        process::exit(0);
+    }       
 
     // Identifying OS. Определяем ОС
     let os = if  cfg!(target_os = "linux") {
@@ -162,4 +167,23 @@ fn main() {
         let info_row = info_lines.get(i).map_or("", |s| s.as_str());
         println!("{:<width$} {}", art_row, info_row, width = padding);
     }
+}
+
+fn help_program() {
+    let version = env!("CARGO_PKG_VERSION");
+    println!(r#"
+Noorfetch - a blazingly fetch, written in Rust!
+
+Usage:
+   noorfetch [FLAG]
+
+Flags:
+   -h,  --help        Help flag
+   -nc, --no-color    Disable colo(u)r for module
+
+License:
+  Noorfetch is licensed under GNU GPL v3.0 or later.
+  Official source: https://codeberg.org/limforge/noorfetch
+
+Noorfetch v{}. 2026. limforge."#, version);
 }
