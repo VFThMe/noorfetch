@@ -59,7 +59,7 @@ fn main() {
     let total_swap    =       sys.total_swap();
     let used_swap     =       sys.used_swap();
     let cpu           =       sys.cpus().len();
-//    let target_proc   =       1;
+    let target_proc   =       1;
     let days          =       date::get_install_days();
     let environment   = if cfg!(target_os = "windows") {
 	format!("Explorer DE")
@@ -79,38 +79,35 @@ fn main() {
     } else { 
         System::kernel_version().unwrap_or("Unknown".to_string())
     };
-/*    let init = if let Some(process) = sys.process(Pid::from(target_proc)) {
+    let init = if let Some(process) = sys.process(Pid::from(target_proc)) {
         process.name().to_string_lossy().into_owned()
     } else {
         "Unknown".to_string()
-    }; */
+    };
 
     // Check icon support and the presence of the --no-color or -nc flag. Проверяем наличие флага --no-color или -nc.
     let use_color = !no_color;
+    
+    let mut noorfetch: Vec<(String, String, Color)> = Vec::new();
 
-let mut noorfetch: Vec<(String, String, Color)> = Vec::new();
+    let add_if_enabled = |noorfetch: &mut Vec<(String, String, Color)>, key: &str, label: &str, value: String, color: Color| {
+	if cfg.modules.get(key).map_or(true, |m| m.display) {
+            noorfetch.push((label.to_string(), value, color));
+	}
+    };
 
-let add_if_enabled = |noorfetch: &mut Vec<(String, String, Color)>, key: &str, label: &str, value: String, color: Color| {
-    if cfg.modules.get(key).map_or(true, |m| m.display) {
-        noorfetch.push((label.to_string(), value, color));
-    }
-};
+    add_if_enabled(&mut noorfetch, "os", "os ", os.clone(), Color::TrueColor { r: 220, g: 138, b: 120 });
+    add_if_enabled(&mut noorfetch, "user", "user ", username.clone(), Color::TrueColor { r: 221, g: 120, b: 120 });
+    add_if_enabled(&mut noorfetch, "hostname", "host ", hostname.clone(), Color::TrueColor { r: 234, g: 118, b: 203 });
+    add_if_enabled(&mut noorfetch, "wm", "wm/de ", environment.clone(), Color::TrueColor { r: 136, g: 57, b: 239 });
 
-add_if_enabled(&mut noorfetch, "os", "os ", os.clone(), Color::TrueColor { r: 220, g: 138, b: 120 });
-
-add_if_enabled(&mut noorfetch, "user", "user ", username.clone(), Color::TrueColor { r: 221, g: 120, b: 120 });
-
-add_if_enabled(&mut noorfetch, "hostname", "host ", hostname.clone(), Color::TrueColor { r: 234, g: 118, b: 203 });
-
-add_if_enabled(&mut noorfetch, "wm", "wm/de ", environment.clone(), Color::TrueColor { r: 136, g: 57, b: 239 });
-
-add_if_enabled(
-    &mut noorfetch,
-    "ram",
-    "ram ",
-    format!("{}/{} MiB", used_memory / 1024 / 1024, total_memory / 1024 / 1024),
-    Color::TrueColor { r: 230, g: 69, b: 83 },
-);
+    add_if_enabled(
+	&mut noorfetch,
+	"ram",
+	"ram ",
+	format!("{}/{} MiB", used_memory / 1024 / 1024, total_memory / 1024 / 1024),
+	Color::TrueColor { r: 230, g: 69, b: 83 },
+    );
     if used_swap > 0 && cfg.modules.get("swap").map_or(true, |m| m.display) {
 	noorfetch.push((
         "swap ".to_string(),
@@ -134,11 +131,15 @@ add_if_enabled(
 	add_if_enabled(&mut noorfetch, "days", "days ", days.clone(), Color::TrueColor { r: 23, g: 146, b: 153 });
     }
     
-let mut info_lines: Vec<String> = Vec::new();
+    add_if_enabled(&mut noorfetch, "init", "init", init, Color::TrueColor { r: 4, g: 165, b: 229 });
+
+    // Create a new vector. Создаем новый вектор
+    let mut info_lines: Vec<String> = Vec::new();
 
     info_lines.push(format!("{}@{}", username, hostname));
     info_lines.push("-".repeat(username.len() + hostname.len() + 1));
 
+    // Проверяем наличие флага --no-color/nc и выводим фетч
     if use_color {
         for (label, value, color) in noorfetch {
             info_lines.push(format!("{:<6} {}", label.color(color).bold(), value));
