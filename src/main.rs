@@ -3,6 +3,7 @@ use whoami;
 use colored::*;
 use os_release::OsRelease;
 use std::*;
+use std::time::Instant;
 
 // Подключаем сторонние файлы из директории UX
 // #[path = "Settings/detect_icons.rs"]
@@ -20,18 +21,25 @@ mod config;
 // use config::load_config;
 
 fn main() {
-    // Config. Конфигурационный файл
-    let cfg = config::load_config();
     
-    // Создаем вектор аргументов командной строки и проверяем наличие флага --legacy или -l
-    let args: Vec<String> = env::args().collect();
-    let no_color = args.iter().any(|arg| arg == "--no-color" || arg == "-nc");
+    let startup = Instant::now();
 
-    if args.iter().any(|arg| arg == "--help" || arg == "-h") {
-	help_program();
-	std::process::exit(0);
+    // -- flags -- //
+    let args: Vec<String> = env::args().collect();
+    let no_color = args.iter().any(|a| a == "--no-color" || a == "-nc");
+    if args.iter().any(|a| a == "--help" || a == "-h") {
+        help_program();
+        process::exit(0);
     }
-    // Identifying OS. Определяем ОС
+    
+    let cfg = config::load_config();
+
+    // -- debug -- //
+    if args.iter().any(|a| a == "--debug" || a == "-d") {
+        let ms = startup.elapsed().as_secs_f64() * 1000.0;
+        println!("Startup time: {:.2} ms", ms);
+    }
+    // -- identifying OS -- //
     let os = if  cfg!(target_os = "linux") {
         OsRelease::new().ok().and_then(|r| Some(r.pretty_name)).unwrap_or("Linux".to_string())
     } else if cfg!(target_os = "macos") {
@@ -46,6 +54,7 @@ fn main() {
         "Unknown".to_string()
     };
 
+    // -- logo -- //
     let requested_logo = args.iter()
         .find(|&a| a.starts_with("--logo="))
         .and_then(|a| a.strip_prefix("--logo=").map(str::to_string));
@@ -200,6 +209,7 @@ Usage:
 
 Flags:
    -h,  --help        Help flag
+   -d,  --debug       Shows the time it took for the program to start
    -nc, --no-color    Disable colo(u)r for module
    --logo=[DISTRO]    Display the ASCII art you specified
 
@@ -208,6 +218,7 @@ Flags:
 
 Noorfetch v{}. 2026. limforge."#, version);
 }
+
  fn visible_len(s: &str) -> usize {
     let mut is_ansi = false;
     let mut count = 0;
