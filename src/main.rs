@@ -193,7 +193,7 @@ Usage:
 Flags:
    -h,  --help        Help flag
    -nc, --no-color    Disable colo(u)r for module
-   --logo={DISTRO}    Display the ASCII art you specified
+   --logo=[DISTRO]    Display the ASCII art you specified
 
   Noorfetch is licensed under GNU GPL v3.0 or later.
   Official source: https://codeberg.org/limforge/noorfetch

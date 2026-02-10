@@ -12,8 +12,6 @@ impl Distro {
     pub fn from_string(name: &str) -> Self {
         let name = name.to_lowercase();
 
-        // Список кортежей: (что ищем в строке, какой результат возвращаем)
-        // Порядок важен: более специфичные названия (Lubuntu) ставим выше общих (Ubuntu)
         const RULES: &[(&str, Distro)] = &[
  //           ("windows", Distro::Windows),
             ("darwin", Distro::MacOS),
@@ -82,13 +80,13 @@ pub fn ascii_art(&self) -> &'static str {
 /////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////"#,*/
-            Distro::MacOS => r#"        .:'
+           Distro::MacOS => r#"\033[32m        .:'
     __ :'__
- .'`  `-'  ``.
-:          .-'
-:         :
- :         `-;
-  `.__.-.__.'"#,
+ .'`  `-'  ``.\033[0m
+\033[38;5;208m:          .-'
+:         :\033[0m
+\033[31m :         `-;:\033[0m\033[35m
+  `.__.-.__.'\033[0m"#,
             Distro::Ubuntu => r#"       ..;,; .,;,.
     .,lool: .ooooo,
    ;oo;:    .coool.
