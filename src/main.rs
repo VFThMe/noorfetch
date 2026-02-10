@@ -168,17 +168,25 @@ fn main() {
         }
     }
 
-    let art_lines: Vec<&str> = art.lines().collect();
+/*    let art_lines: Vec<&str> = art.lines().collect();
     let art_width = art_lines.iter().map(|l| l.len()).max().unwrap_or(0);
     let padding = art_width + 5;
-
+     */
+    let art_lines: Vec<String> = art.lines().map(|s| s.to_string()).collect();
+    let art_width = art_lines.iter().map(|l| visible_len(l)).max().unwrap_or(0);
+    let padding = art_width + 5;
     let max_l = std::cmp::max(art_lines.len(), info_lines.len());
 
     println!();
     for i in 0..max_l {
-        let art_row = art_lines.get(i).unwrap_or(&"");
+        let art_row = art_lines.get(i).cloned().unwrap_or_default();
         let info_row = info_lines.get(i).map_or("", |s| s.as_str());
-        println!("{:<width$} {}", art_row, info_row, width = padding);
+        
+        // Считаем, сколько реально пробелов нужно добавить
+        let visible = visible_len(&art_row);
+        let current_padding = if padding > visible { padding - visible } else { 0 };
+        
+        println!("{}{:<width$} {}", art_row, "", info_row, width = current_padding);
     }
 }
 
@@ -199,4 +207,28 @@ Flags:
   Official source: https://codeberg.org/limforge/noorfetch
 
 Noorfetch v{}. 2026. limforge."#, version);
+}
+ fn visible_len(s: &str) -> usize {
+    let mut is_ansi = false;
+    let mut count = 0;
+    
+    let chars: Vec<char> = s.chars().collect();
+    let mut i = 0;
+    while i < chars.len() {
+        if chars[i] == '\x1b' && i + 1 < chars.len() && chars[i+1] == '[' {
+            is_ansi = true;
+            i += 2;
+            continue;
+        }
+        if is_ansi {
+            if chars[i].is_ascii_alphabetic() {
+                is_ansi = false;
+            }
+            i += 1;
+            continue;
+        }
+        count += 1;
+        i += 1;
+    }
+    count
 }

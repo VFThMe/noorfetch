@@ -1,6 +1,6 @@
 [package]
 name = "noorfetch"
-version = "1.7.11"
+version = "2.7.10"
 edition = "2024"
 
 [profile.release]

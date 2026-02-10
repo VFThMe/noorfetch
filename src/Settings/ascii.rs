@@ -61,8 +61,18 @@ impl Distro {
             .unwrap_or(Distro::Unknown)
     }    
 // Возвращаем ASCII арт для каждого дистрибутива
-pub fn ascii_art(&self) -> &'static str {
-        match self {
+    pub fn ascii_art(&self) -> String {
+	
+	const G: &str = "\x1b[32m";
+	const J: &str = "\x1b[36m";
+        const Y: &str = "\x1b[33m";
+        const O: &str = "\x1b[38;5;208m";
+        const R: &str = "\x1b[31m";
+        const M: &str = "\x1b[35m";
+        const B: &str = "\x1b[34m";
+        const RESET: &str = "\x1b[0m";
+	
+        let art = match self {
            /* Distro::Windows => r#"/////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////
@@ -80,74 +90,80 @@ pub fn ascii_art(&self) -> &'static str {
 /////////////////  /////////////////
 /////////////////  /////////////////
 /////////////////  /////////////////"#,*/
-           Distro::MacOS => r#"\033[32m        .:'
-    __ :'__
- .'`  `-'  ``.\033[0m
-\033[38;5;208m:          .-'
-:         :\033[0m
-\033[31m :         `-;:\033[0m\033[35m
-  `.__.-.__.'\033[0m"#,
-            Distro::Ubuntu => r#"       ..;,; .,;,.
+            Distro::MacOS => r#"{G}        .:'
+    __ :'__{RESET}
+{Y} .'`  `-'  ``.\{RESET}
+{O}:          .-'{RESET}
+{R}:         :{RESET}
+{M}:         `-;:{RESET}
+{B}  `.__.-.__.'{RESET}"#,
+            Distro::Ubuntu => r#"{O}       ..;,; .,;,.
     .,lool: .ooooo,
    ;oo;:    .coool.
- ....         ''' ,l;
-:oooo,            'oo.
-looooc            :oo'
- '::'             ,oo:
-   ,.,       .... co,
-    lo:;.   :oooo; .
-     ':ooo; cooooc
-        '''  ''''"#,
+{O} ....         ''' ,l;
+{O}:oooo,            'oo.
+{O}looooc            :oo'
+{O} '::'             ,oo:
+{O}   ,.,       .... co,
+{O}    lo:;.   :oooo; .
+{O}     ':ooo; cooooc
+{O}        '''  ''''{RESET}"#,
 
             Distro::Arch => r#"
+{B}         /\
+{B}        /  \
+{B}       /    \
+{B}      /      \
+{B}     /   ,,   \
+{B}    /   |  |   \
+{B}   /_-''    ''-_\{RESET}"#,
+            Distro::Fedora => r#"
 
-         /\
-        /  \
-       /    \
-      /      \
-     /   ,,   \
-    /   |  |   \
-   /_-''    ''-_\"#,
-            Distro::Fedora => r#"     __
+{B}     __
     /  \
- __ |_
-/   |
-\__/"#,
-            Distro::Gentoo => r#" _-----_
-(       \
-\    0   \
- \        )
- /      _/
-(     _-
-\____-"#,
-            Distro::CachyOS => r#"    ____________
+{B} __ |_
+{B}/   |
+{B}\__/{RESET}"#,
+            Distro::Gentoo => r#"{M} _-----_
+{M}(       \
+{M}\    0   \
+{M}\        )
+{M} /      _/
+{M}(     _-
+{M}\____-{RESET}"#,
+            Distro::CachyOS => r#"{G}    ____________
    /            /  o
   /      ______/
- /      /        o
-/      /
-\      \
- \      \__________ o
-  \               /
-   \_____________/"#,
-            Distro::Debian => r#"  _____
- /  __ \
-|  /    |
-|  \___-
--_
-  --_"#,
-            Distro::Unknown => r#" _      ____  ____  ____  _____ _____ _____ ____ _    
-/ \  /|/  _ \/  _ \/  __\/    //  __//__ __Y   _Y \ /|
-| |\ ||| / \|| / \||  \/||  __\|  \    / \ |  / | |_||
-| | \||| \_/|| \_/||    /| |   |  /_   | | |  \_| | ||
-\_/  \|\____/\____/\_/\_\\_/   \____\  \_/ \____|_/ \|
+{G} /      /        o
+{G}/      /
+{G}\      \
+{G} \      \__________ o
+{G}  \               /
+{G}   \_____________/{RESET}"#,
+            Distro::Debian => r#"{R}  _____
+ / {RESET} _{R}_ \
+{R}| {RESET} /{R}    |
+{R}{RESET}|  \{R}_{RESET}{R}__-
+{RESET}-{R}_
+{RESET}  -{R}-_{RESET}"#,
+            Distro::Unknown => r#"
+
+
+{R} _      ____  ____  ____  _____ _____ _____ ____ _    
+{RESET}{O}/ \  /|/  _ \/  _ \/  __\/    //  __//__ __Y   _Y \ /|{RESET}
+{Y}| |\ ||| / \|| / \||  \/||  __\|  \    / \ |  / | |_||{RESET}
+{G}| | \||| \_/|| \_/||    /| |   |  /_   | | |  \_| | ||{RESET}
+{B}\_/  \|\____/\____/\_/\_\\_/   \____\  \_/ \____|_/ \|{RESET}
                                                       "#,
-            Distro::EndeavourOS => r#"          /o.
-        /sssso-
-      /ossssssso:
-    /ssssssssssso+
-  /ssssssssssssssso+
-//osssssssssssssso+-
- `+++++++++++++++-`"#,
+            Distro::EndeavourOS => r#"
+
+            {M}/o.{RESET}
+         {O}/{RESET}{M}sssso{RESET}{B}-{RESET}
+        {O}/{RESET}{M}ossssssso{RESET}{B}:{RESET}
+     {O}/{RESET}{M}sssssssssss{RESET}{B}o+{RESET}
+   {O}/{RESET}{M}ssssssssssssssso{RESET}{B}+{RESET}
+  {O}//{RESET}{M}osssssssssssssso{RESET}{B}+-{RESET}
+  {B} `+++++++++++++++-`{RESET}"#,
           Distro::Trisquel => r#"                           ..           
                         <<!OOOO~        
                      !!mm`    ;;.       
@@ -174,17 +190,17 @@ looooc            :oo'
  🬷▛🮃▙    ▟▛
  🮃 ▟█🬴▀▀▀█🬴▀▀
   ▝▀ ▀▘   ▀▘"#,
-          Distro::Bazzite => r#"    \\KK999999000009999999             
-   --\++++KKKK++++++++++++++,-          
-  \+++++++KKKK++++++++++==~```,,-       
-  9+++++++KKKK++++++++++~~````+++--     
-  9KKNNNNKKKKTKKKKKNNNNNNKKK+`````+9    
-  9KKKKTTTTTTTTTTKTKKKDDDKKKK``````0    
-  9+++++++KKLK+++++++++++++KKKK````0    
-  0+++++++KKLK++++++++++++++TKN````0    
-  0+++++++KNLK+++++++++++++++KN````0    
-  0++++++~KNLK+++++++++++++++KK````9    
-  0++++++~KNLK++++++++++++++KKK````9    
+            Distro::Bazzite => r#"{M}    \\KK999999000009999999             
+   --\++++{RESET}KKKK{M}++++++++++++++,-          
+  \+++++++{RESET}KKKK{M}++++++++++==~```,,-       
+{M}  9+++++++{RESET}KKKK{M}++++++++++~~````+++--{RESET}     
+  {M}9{RESET}KKNNNNKKKKTKKKKKNNNNNNKKK{M}+`````+9{RESET}    
+  {M}9{RESET}KKKKTTTTTTTTTTKTKKKDDDKKKK{M}``````0    
+  {M}9++{RESET}{M}+++++{RESET}KKLK{M}+++++++++++++{RESET}KKKK{M}````0    
+  {M}0++{RESET}{M}+++++{RESET}KKLK{M}++++{RESET}{B}++++++++++{RESET}TKN{M}````0    
+  {M}0{B}+++++++{RESET}KNLK{B}+++++++++++++++{RESET}KN{M}```{RESET}{M}`0    
+  {M}0{RESET}{B}++++++~{RESET}KNLK{RESET}{B}+++++++++++++++{RESET}KK{B}````{RESET}{M}9    
+  {M}0{RESET}{B}++++++~{RESET}KNLK{B}++++++++++++++{RESET}KKK{B}````{RESET}{M}9    
   9+++++++KKKK+++++++++++[KKKK+````9    
   9+++++++KKKN+++++++++NNNNKKK`````9    
   9++++++++KKN++++++[[[KNKKKK``````9    
@@ -192,33 +208,37 @@ looooc            :oo'
     vv++++==+KKKKKKKKKKK````````,,      
       +vvv,vv+~~"""""""">M>~~`--        
             v99999999999          "#,
-        Distro::Manjaro => r#"||||||||| ||||
-||||||||| ||||
-||||      ||||
-|||| |||| ||||
-|||| |||| ||||
-|||| |||| ||||
-|||| |||| ||||"#,
-            Distro::Artix => r#"            '
-           'A'
-          'ooo'
-         'ookxo'
-         `ookxxo'
-       '.   `ooko'
-      'ooo`.   `oo'
-     'ooxxxoo`.   `'
-    'ookxxxkooo.`   .
-   'ookxxkoo'`   .'oo'
-  'ooxoo'`     .:ooxxo'
- 'io'`             `'oo'
+            Distro::Manjaro => r#"
+
+{G}||||||||| ||||
+{G}||||||||| ||||
+{G}||||      ||||
+{G}|||| |||| ||||
+{G}|||| |||| ||||
+{G}|||| |||| ||||
+{G}|||| |||| ||||"#,
+            Distro::Artix => r#"{B}            '
+{B}           'A'
+{B}          'ooo'
+{B}         'ookxo'
+{B}         `ookxxo'
+{B}       '.   `ooko'
+{B}      'ooo`.   `oo'
+{B}     'ooxxxoo`.   `'
+{B}    'ookxxxkooo.`   .
+{B}   'ookxxkoo'`   .'oo'
+{B}  'ooxoo'`     .:ooxxo'
+{B} 'io'`             `'oo'
 '`                     `'"#,
-        Distro::Void => r#"    _______
- _ \______ -
-| \  ___  \ |
-| | /   \ | |
-| | \___/ | |
-| \______ \_|
- -_______\"#,
+            Distro::Void => r#"
+
+{G}    _______
+{G} _ \______ -
+{G}| \  ___  \ |
+{G}| | /   \ | |
+{G}| | \___/ | |
+{G}| \______ \_|
+{G} -_______\"#,
         Distro::ALT => r#"   ``````````````````````````````````  
     ``````````````````````````````````  
     ``````````````````````````````````  
@@ -235,38 +255,43 @@ looooc            :oo'
     ``` /\__ / /    | `._/| /  \  ````  
     ```                           ````  
     ```                           ````"#,
-        Distro::Guix => r#"|.__          __.|
-|__ \        / __|
-   \ \      / /
-    \ \    / /
-     \ \  / /
-      \ \/ /
-       \__/"#,
-        Distro::Kali => r#"     -#. #
+            Distro::Guix => r#"
+
+  {Y}|.__          __.|
+  {Y}|__ \        / __|
+  {Y}   \ \      / /
+  {Y}    \ \    / /
+  {Y}     \ \  / /
+  {Y}      \ \/ /
+  {Y}       \__/"#,
+            Distro::Kali => r#"
+     -#. #
       @###
-  -######
- @#########
-=##.  .#####
-##      ## ##
-##       ## #
-##       @###
-##.        ###
- ##%       ##-
-  -##%    -*
-   :*##+
-     :*#*
-       -#
-        @
-        :"#,
-        Distro::OpenSUSE => r#" .oooo.
-o   o  o
-ooooo  oo
-o      oo
- 'oooooooooooo.
-       oo      o
-       oo  ooooo
-        o  o   o
-         'oooo'"#,
+{B}  -######
+{B} @#########
+{B}=##. {RESET} .#####
+{B}##     {RESET} ## ##
+{B}##       {RESET}## #
+{B}##       {RESET}@###
+{B}##.        {RESET}###
+{B}##%       {RESET}##-
+{B}  -##%{RESET}    -*
+{B}   :*##+
+{B}     :*#*
+{B}       -#
+{B}        @
+{B}        :"#,
+            Distro::OpenSUSE => r#"
+
+{G} .oooo.
+{G}o   o  o
+{G}ooooo  oo
+{G}o      oo
+{G} 'oooooooooooo.
+{G}       oo      o
+{G}       oo  ooooo
+{G}        o  o   o
+{G}         'oooo'"#,
         Distro::Lubuntu => r#"                 ...........           
                 `77MMMMMMMMMMM``        
                hhMM``      `vMM======   
@@ -304,13 +329,15 @@ g@@@@@@@@@#####################@@@@@@@@@@@@@@
       `~@@@@@@@@@@@@@@@@@@@@@@@@@@@@@F`
          ~~4@@@@@@@@@@@@@@@@@@@@@P~~
              `~~=R@@@@@@@@@P=~~~"#,
-        Distro::Vanilla => r#"      ,x.
-     ;&?^.
-.-e~^+7'  )adbx,
- \#\.  `,*~ ~*/
-  `~*+-'-<ay,^ 
-  ,/  ,%\ `\&,
-  !&UP*  +./%?"#,
+            Distro::Vanilla => r#"
+
+{Y}      ,x.
+{Y}     ;&?^.
+{Y}.-e~^+7'  )adbx,
+{Y} \#\.  `,*~ ~*/
+{Y}  `~*+-'-<ay,^ 
+{Y}  ,/  ,%\ `\&,
+{Y}  !&UP*  +./%?"#,
         Distro::Garuda => r#"     .----.
    .'   ,  '.
  .'    '-----|
@@ -356,15 +383,16 @@ Nsyh+-..+y+-   yMMMMd   :mMM+
          -oNMMMMMMMMMMmy+.`
            `:yNMMMds/.`
               .//`"#,
-        Distro::RedHat => r#"      .M.:MMM
-     MMMMMMMMMM.
-    ,MMMMMMMMMMM
- .MM MMMMMMMMMMM
-MMMM   MMMMMMMMM
-MMMMMM           MM
- MMMMMMMMM     ,MMMM
-   MMMMMMMMMMMMMMMM:
-      `MMMMMMMMMMMM "#,
+            Distro::RedHat => r#"
+{R}      .M.:MMM
+{R}     MMMMMMMMMM.
+{R}    ,MMMMMMMMMMM
+{R} .MM MMMMMMMMMMM
+{R}MMMM   MMMMMMMMM
+{R}MMMMMM           MM
+{R} MMMMMMMMM     ,MMMM
+{R}   MMMMMMMMMMMMMMMM:
+{R}      `MMMMMMMMMMMM "#,
         Distro::Calculate => r#"                              ......
                            ,,+++++++,.
                          .,,,....,,,+**+,,.
@@ -409,26 +437,27 @@ eee    eeeeeeeeee     eeeeee    eee
     eeeee                 eeeee
       eeeeeee         eeeeeee
          eeeeeeeeeeeeeeeee"#,
-        Distro::PopOS => r#"             /////////////
-         /////////////////////
-      ///////*767////////////////
-    //////7676767676*//////////////
-   /////76767//7676767//////////////
-  /////767676///*76767///////////////
- ///////767676///76767.///7676*///////
-/////////767676//76767///767676////////
-//////////76767676767////76767/////////
-///////////76767676//////7676//////////
-////////////,7676,///////767///////////
-/////////////*7676///////76////////////
-///////////////7676////////////////////
- ///////////////7676///767////////////
-  //////////////////////'////////////
-   //////.7676767676767676767,//////
-    /////767676767676767676767/////
-      ///////////////////////////
-         /////////////////////
-             /////////////"#,
+            Distro::PopOS => r#"
+{B}             /////////////
+{B}          /////////////////////
+{B}       ///////{RESET}767{B}////////////////
+{B}    //////{RESET}7676767676{B}*//////////////
+{B}   /////{RESET}76767{B}//{RESET}7676767{B}//////////////
+{B}  /////{RESET}767676{B}///*{RESET}76767{B}///////////////
+{B} ///////{RESET}767676{B}///{RESET}76767{B}.///{RESET}7676{B}*///////
+{B} /////////{RESET}767676{B}//{RESET}76767{B}///{RESET}767676{B}////////
+{B} //////////{RESET}76767676767{B}////{RESET}76767{B}/////////
+{B} ///////////{RESET}76767676{B}//////{RESET}7676{B}//////////
+{B} ////////////,{RESET}7676{B},///////{RESET}767{B}///////////
+{B} /////////////{B}*{RESET}7676{B}///////{RESET}76{B}////////////
+{B} ///////////////{RESET}7676{B}////////////////////
+{B} ///////////////{RESET}7676{B}///{RESET}767{B}////////////
+{B}  //////////////////////'////////////
+{B}   //////.{RESET}7676767676767676767{B},//////
+{B}     /////{RESET}767676767676767676767{B}/////
+{B}       ///////////////////////////
+{B}          /////////////////////
+{B}              /////////////"#,
         Distro::Devuan => r#"    ..-==-
         .+#:
          =@@
@@ -453,12 +482,15 @@ eee    eeeeeeeeee     eeeeee    eee
       ,dkkkkkkkkkkkkko;.    .;o;
         .;okkkkkdl;.    .,cl:.
             .,:cccccccc:,."#,
-        Distro::FreeBSD => r#"/\,-'''''-,/\
-\_)       (_/
-|           |
-|           |
- ;         ;
-  '-_____-'"#,
+            Distro::FreeBSD => r#"
+
+
+ {R}/\,-'''''-,/\
+ {R}\_)       (_/
+ {R}|           |
+ {R}|           |
+ {R} ;         ;
+ {R}  '-_____-'"#,
         Distro::NetBSD => r#" \\`-______,----__
   \\        __,---`_
    \\       `.____
@@ -467,14 +499,24 @@ eee    eeeeeeeeee     eeeeee    eee
       \\
        \\
         \\"#,
-        Distro::OpenBSD => r#"      _____
-    \-     -/
- \_/         \
- |        O O |
- |_  <   )  3 )
- / \         /
-    /-_____-\"#,
-        }
+            Distro::OpenBSD => r#"
+
+{Y}      _____
+{Y}    \-     -/
+{Y} \_/         \
+{Y} |        O O |
+{Y} |_  <   )  3 )
+{Y} / \         /
+{Y}    /-_____-\"#,
+        };
+	art.replace("{G}", G)
+            .replace("{Y}", Y)
+            .replace("{O}", O)
+            .replace("{R}", R)
+            .replace("{M}", M)
+            .replace("{B}", B)
+	    .replace("J", J)
+            .replace("{RESET}", RESET)
     }
 
 }

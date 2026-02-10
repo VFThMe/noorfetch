@@ -4,7 +4,8 @@
 - [x] Create package in AUR
 - [x] Create noorfetch installer
 - [x] Create initial ASCII art
+- [x] Create a colour for ASCII art
+- [ ] Update configuration file
 - [ ] Display the package quantity
 - [ ] Create --pallete/-p flag
-- [ ] Update configuration file
-- [ ] Create a colour for ASCII art
+
