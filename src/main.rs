@@ -26,12 +26,11 @@ fn main() {
     // Создаем вектор аргументов командной строки и проверяем наличие флага --legacy или -l
     let args: Vec<String> = env::args().collect();
     let no_color = args.iter().any(|arg| arg == "--no-color" || arg == "-nc");
-    
-    if args.len() > 1 && (args[2] == "--help" || args[2] == "-h") {
-        help_program();
-        process::exit(0);
-    }       
 
+    if args.iter().any(|arg| arg == "--help" || arg == "-h") {
+	help_program();
+	std::process::exit(0);
+    }
     // Identifying OS. Определяем ОС
     let os = if  cfg!(target_os = "linux") {
         OsRelease::new().ok().and_then(|r| Some(r.pretty_name)).unwrap_or("Linux".to_string())
@@ -46,11 +45,25 @@ fn main() {
     } else {
         "Unknown".to_string()
     };
-   
-    // Create a variable distro where we call the function from the file ascii.rs. Создаем переменную distro, в которой мы вызываем функцию из файла ascii.rs.
-    let distro = Distro::from_string(&os); // Change &os to a suitable string for debugging. // Измените &os на подходящую строку для дебага
-    let art = distro.ascii_art();
 
+    let requested_logo = args.iter()
+        .find(|&a| a.starts_with("--logo="))
+        .and_then(|a| a.strip_prefix("--logo=").map(str::to_string));
+
+    let distro = if let Some(name) = requested_logo {
+        let d = Distro::from_string(&name);
+        if matches!(d, Distro::Unknown) && !name.trim().is_empty() {
+            eprintln!("warning: logo '{}' not recognized, using auto-detection", name);
+            Distro::from_string(&os)
+        } else {
+            d
+        }
+    } else {
+        Distro::from_string(&os)
+    };
+
+    let art = distro.ascii_art();
+    
     // Updating system information using sysinfo. Обновление системной информации с помощью sysinfo
     let mut sys = System::new_all();
     sys.refresh_all();
@@ -180,8 +193,8 @@ Usage:
 Flags:
    -h,  --help        Help flag
    -nc, --no-color    Disable colo(u)r for module
+   --logo={DISTRO}    Display the ASCII art you specified
 
-License:
   Noorfetch is licensed under GNU GPL v3.0 or later.
   Official source: https://codeberg.org/limforge/noorfetch
 
