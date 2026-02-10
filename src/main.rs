@@ -214,7 +214,8 @@ Flags:
    --logo=[DISTRO]    Display the ASCII art you specified
 
   Noorfetch is licensed under GNU GPL v3.0 or later.
-  Official source: https://codeberg.org/limforge/noorfetch
+  Official source in Codeberg: https://codeberg.org/limforge/noorfetch
+  Official source in Github: https://github.com/VFThMe/noorfetch 
 
 Noorfetch v{}. 2026. limforge."#, version);
 }
