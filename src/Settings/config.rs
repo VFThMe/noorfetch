@@ -24,10 +24,20 @@ impl ModuleConfig {
     }
 }
 
+// Функция для установки значения по умолчанию при десериализации,
+// если поле "logo" отсутствует в старом json файле.
+fn default_logo() -> String {
+    "default".to_string()
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
     #[serde(rename = "Modules")]
     pub modules: HashMap<String, ModuleConfig>,
+    
+    // Новое поле для логотипа с поддержкой дефолтного значения
+    #[serde(default = "default_logo")]
+    pub logo: String,
 }
 
 impl Default for Config {
@@ -40,7 +50,10 @@ impl Default for Config {
             modules.insert(key.to_string(), ModuleConfig::from_key(key));
         }
 
-        Config { modules }
+        Config { 
+            modules,
+            logo: default_logo(), // Устанавливаем "default"
+        }
     }
 }
 

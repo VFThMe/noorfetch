@@ -59,17 +59,20 @@ fn main() {
         .find(|&a| a.starts_with("--logo="))
         .and_then(|a| a.strip_prefix("--logo=").map(str::to_string));
 
-    let distro = if let Some(name) = requested_logo {
-        let d = Distro::from_string(&name);
-        if matches!(d, Distro::Unknown) && !name.trim().is_empty() {
-            eprintln!("warning: logo '{}' not recognized, using auto-detection", name);
-            Distro::from_string(&os)
-        } else {
-            d
-        }
+    let logo_name = if let Some(flag_name) = requested_logo {
+	flag_name
+    } else if cfg.logo != "default" {
+	cfg.logo.clone()
     } else {
-        Distro::from_string(&os)
+	os.clone()
     };
+
+    let mut distro = Distro::from_string(&logo_name);
+
+    if matches!(distro, Distro::Unknown) && logo_name != "Unknown" {
+	eprintln!("warning: logo '{}' not recognized, falling back to auto-detection", logo_name);
+	distro = Distro::from_string(&os);
+    }
 
     let art = distro.ascii_art();
     
