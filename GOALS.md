@@ -5,7 +5,7 @@
 - [x] Create noorfetch installer
 - [x] Create initial ASCII art
 - [x] Create a colour for ASCII art
-- [ ] Update configuration file
+- [x] Update configuration file
 - [ ] Display the package quantity
 - [ ] Create --pallete/-p flag
 
