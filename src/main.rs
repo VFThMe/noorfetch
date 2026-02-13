@@ -1,9 +1,10 @@
 use sysinfo::*;
 use whoami;
 use colored::*;
-use os_release::OsRelease;
+//use os_release::OsRelease;
 use std::*;
 use std::time::Instant;
+use std::io::{self, IsTerminal};
 
 // Подключаем сторонние файлы из директории UX
 // #[path = "Settings/detect_icons.rs"]
@@ -26,34 +27,34 @@ fn main() {
 
     // -- flags -- //
     let args: Vec<String> = env::args().collect();
+    // debug
+    let debug = args.iter().any(|a| a == "--debug" || a == "-d");
+    // no color
     let no_color = args.iter().any(|a| a == "--no-color" || a == "-nc");
+    // help
     if args.iter().any(|a| a == "--help" || a == "-h") {
         help_program();
         process::exit(0);
     }
+
+    // -- check tty status -- //
+    let isatty = io::stdout().is_terminal();
     
+    // -- load config -- // 
     let cfg = config::load_config();
-
-    // -- debug -- //
-    if args.iter().any(|a| a == "--debug" || a == "-d") {
-        let ms = startup.elapsed().as_secs_f64() * 1000.0;
-        println!("Startup time: {:.2} ms", ms);
-    }
+    
     // -- identifying OS -- //
-    let os = if  cfg!(target_os = "linux") {
-        OsRelease::new().ok().and_then(|r| Some(r.pretty_name)).unwrap_or("Linux".to_string())
-    } else if cfg!(target_os = "macos") {
-        format!("macOS {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "freebsd") {
-        format!("FreeBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "netbsd") {
-        format!("NetBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else if cfg!(target_os = "openbsd") {
-        format!("OpenBSD {}", System::os_version().unwrap_or("Unknown".to_string()))
-    } else {
-        "Unknown".to_string()
-    };
+    let os_name = System::name().unwrap_or("Unknown".to_string());
+    let os_version = System::os_version().unwrap_or("?".to_string());
 
+    let os = match () {
+	_ if cfg!(target_os = "linux")   => format!("{} {}", os_name, os_version),
+	_ if cfg!(target_os = "macos")   => format!("macOS {}", os_version),
+	_ if cfg!(target_os = "freebsd") => format!("FreeBSD {}", os_version),
+	_ if cfg!(target_os = "windows") => format!("Windows {}", os_version),
+	_ => os_name,
+    };
+    
     // -- logo -- //
     let requested_logo = args.iter()
         .find(|&a| a.starts_with("--logo="))
@@ -76,11 +77,14 @@ fn main() {
 
     let art = distro.ascii_art();
     
-    // Updating system information using sysinfo. Обновление системной информации с помощью sysinfo
+    // -- Updating system information using sysinfo -- // 
     let mut sys = System::new_all();
     sys.refresh_all();
     get_wm();
 
+    // -- no_color and isatty check -- //
+    let use_color = !no_color && isatty;
+    
     // Create variables where we store information about the user, memory, and kernel from sysinfo, whoami, and os_release.
     // Создаем переменные, в которых мы будем хранить информацию о пользователе, памяти и ядре из sysinfo, whoami и os_release.
     let username      =       whoami::username().unwrap_or_else(|_| "<unknown>".to_string());
@@ -91,8 +95,8 @@ fn main() {
     let cpu           =       sys.cpus().len();
     let target_proc   =       1;
     let days          =       date::get_install_days();
-    let environment   = if cfg!(target_os = "windows") {
-	format!("Explorer DE")
+    let environment   = if isatty {
+	"TTY".to_string()
     } else if cfg!(target_os = "macos") {
 	format!("Aqua MacOS")
     } else {
@@ -114,9 +118,6 @@ fn main() {
     } else {
         "Unknown".to_string()
     };
-
-    // Check icon support and the presence of the --no-color or -nc flag. Проверяем наличие флага --no-color или -nc.
-    let use_color = !no_color;
     
     let mut noorfetch: Vec<(String, String, Color)> = Vec::new();
 
@@ -157,7 +158,7 @@ fn main() {
 
     add_if_enabled(&mut noorfetch, "krnl", "krnl ", kernel.clone(), Color::TrueColor { r: 64, g: 160, b: 43 });
 
-    if days != "Unknown".to_lowercase() && days != "0" {
+    if days != "Unknown".to_lowercase() && days != "0 days" && days != "0" {
 	add_if_enabled(&mut noorfetch, "days", "days ", days.clone(), Color::TrueColor { r: 23, g: 146, b: 153 });
     }
     
@@ -200,6 +201,10 @@ fn main() {
         
         println!("{}{:<width$} {}", art_row, "", info_row, width = current_padding);
     }
+    if debug {
+        let ms = startup.elapsed().as_secs_f64() * 1000.0;
+        println!("\nStartup time: {:.2} ms", ms);
+    }
 }
 
 fn help_program() {
@@ -207,18 +212,17 @@ fn help_program() {
     println!(r#"
 Noorfetch - a blazingly fetch, written in Rust!
 
-Usage:
-   noorfetch [FLAG]
+Usage: noorfetch [OPTION]..
 
-Flags:
-   -h,  --help        Help flag
-   -d,  --debug       Shows the time it took for the program to start
-   -nc, --no-color    Disable colo(u)r for module
-   --logo=[DISTRO]    Display the ASCII art you specified
+Options:
+  -h,  --help        Display this help and exit
+  -d,  --debug       Shows the time it took for the program to start
+  -nc, --no-color    Disable color for module
+  --logo=[DISTRO]    Display the ASCII art you specified
 
-  Noorfetch is licensed under GNU GPL v3.0 or later.
-  Official source in Codeberg: https://codeberg.org/limforge/noorfetch
-  Official source in Github: https://github.com/VFThMe/noorfetch 
+Noorfetch is licensed under GNU GPL v3.0 or later.
+Official source in Codeberg: https://codeberg.org/limforge/noorfetch
+Official source in Github: https://github.com/VFThMe/noorfetch 
 
 Noorfetch v{}. 2026. limforge."#, version);
 }
