@@ -15,23 +15,45 @@ impl Default for ModuleConfig {
     }
 }
 
+impl ModuleConfig {
+    pub fn from_key(key: &str) -> Self {
+        match key {
+            "init" => Self { display: false },
+            _ => Self::default(),           
+        }
+    }
+}
+
+// Функция для установки значения по умолчанию при десериализации,
+// если поле "logo" отсутствует в старом json файле.
+fn default_logo() -> String {
+    "default".to_string()
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
-    // Используем #[serde(rename)], чтобы в JSON было "Modules", а в коде - "modules"
     #[serde(rename = "Modules")]
     pub modules: HashMap<String, ModuleConfig>,
+    
+    // Новое поле для логотипа с поддержкой дефолтного значения
+    #[serde(default = "default_logo")]
+    pub logo: String,
 }
 
 impl Default for Config {
     fn default() -> Self {
         let mut modules = HashMap::new();
         // Список модулей по умолчанию
-        let keys = vec!["os", "user", "hostname", "ram", "swap", "cpu", "krnl"];
+        let keys = vec!["os", "user", "hostname", "ram", "swap", "cpu", "krnl", "days", "init"];
+        
         for key in keys {
-            modules.insert(key.to_string(), ModuleConfig::default());
+            modules.insert(key.to_string(), ModuleConfig::from_key(key));
         }
 
-        Config { modules }
+        Config { 
+            modules,
+            logo: default_logo(), // Устанавливаем "default"
+        }
     }
 }
 
