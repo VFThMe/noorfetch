@@ -95,13 +95,34 @@ fn main() {
     let cpu           =       sys.cpus().len();
     let target_proc   =       1;
     let days          =       date::get_install_days();
-    let environment   = if isatty {
-	"TTY".to_string()
-    } else if cfg!(target_os = "macos") {
+   /* let environment   = if cfg!(target_os = "macos") {
 	format!("Aqua MacOS")
     } else {
-	environment::get_wm().unwrap_or_else(|| "Unknown".to_string())
+            let wm = environment::get_wm().unwrap_or_else(|| "Unknown".to_string());
+            if wm.trim().is_empty() || wm.to_lowercase() == "tty" || wm == "Unknown" {
+                "TTY".to_string()
+            } else {
+                wm
+            }
+    } else {
+        "TTY".to_string()
+    }; */
+
+    let environment = if isatty {
+        if cfg!(target_os = "macos") {
+            "Aqua macOS".to_string()
+        } else {
+            let wm = environment::get_wm().unwrap_or_else(|| "Unknown".to_string());
+            if wm.trim().is_empty() || wm.to_lowercase() == "tty" || wm == "Unknown" {
+                "TTY".to_string()
+            } else {
+                wm
+            }
+        }
+    } else {
+        "TTY".to_string()
     };
+    
     let cpu_brand     = sys.cpus().get(0).map(|c| c.brand()).unwrap_or("Unknown CPU");
     let hostname      = System::host_name().unwrap_or("Unknown".to_string());
     let kernel        = if cfg!(target_os = "windows") { 
