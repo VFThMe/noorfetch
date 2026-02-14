@@ -1,6 +1,6 @@
 [package]
 name = "noorfetch"
-version = "2.0.0"
+version = "2.1.0"
 keywords = ["fetch", "cli"]
 authors = ["limforge <limforge@neutronen.org>"]
 description = "Noorfetch is a blazingly fast and cool fetch written in Rust!"
