@@ -1,6 +1,11 @@
-use sysinfo::*;
+use sysinfo::{
+    System,
+    ProcessRefreshKind,
+    ProcessesToUpdate,
+    Pid,
+};
 use whoami;
-use colored::*;
+//use colored::*;
 //use os_release::OsRelease;
 use std::*;
 use std::time::Instant;
@@ -14,7 +19,6 @@ mod ascii;
 use ascii::Distro;
 #[path = "Settings/environment.rs"]
 mod environment;
-use environment::get_wm;
 #[path = "Settings/date.rs"]
 mod date;
 #[path = "Settings/config.rs"]
@@ -77,11 +81,17 @@ fn main() {
 
     let art = distro.ascii_art();
     
-    // -- Updating system information using sysinfo -- // 
-    let mut sys = System::new_all();
-    sys.refresh_all();
-    get_wm();
-
+    // -- Updating system information using sysinfo -- //
+    let mut sys = System::new();
+    
+    sys.refresh_memory();
+    sys.refresh_cpu_all(); 
+    
+    sys.refresh_processes_specifics(
+	ProcessesToUpdate::Some(&[Pid::from(1)]),
+	true,                                      // remove_dead_processes = true
+	ProcessRefreshKind::nothing(),
+    );    
     // -- no_color and isatty check -- //
     let use_color = !no_color && isatty;
     
@@ -140,31 +150,31 @@ fn main() {
         "Unknown".to_string()
     };
     
-    let mut noorfetch: Vec<(String, String, Color)> = Vec::new();
-
-    let add_if_enabled = |noorfetch: &mut Vec<(String, String, Color)>, key: &str, label: &str, value: String, color: Color| {
+    let mut noorfetch: Vec<(String, String, String)> = Vec::new();
+    
+    let add_if_enabled = |noorfetch: &mut Vec<(String, String, String)>, key: &str, label: &str, value: String, color: &str| {
 	if cfg.modules.get(key).map_or(true, |m| m.display) {
-            noorfetch.push((label.to_string(), value, color));
+            noorfetch.push((label.to_string(), value, color.to_string()));
 	}
     };
-
-    add_if_enabled(&mut noorfetch, "os", "os ", os.clone(), Color::TrueColor { r: 220, g: 138, b: 120 });
-    add_if_enabled(&mut noorfetch, "user", "user ", username.clone(), Color::TrueColor { r: 221, g: 120, b: 120 });
-    add_if_enabled(&mut noorfetch, "hostname", "host ", hostname.clone(), Color::TrueColor { r: 234, g: 118, b: 203 });
-    add_if_enabled(&mut noorfetch, "wm", "wm/de ", environment.clone(), Color::TrueColor { r: 136, g: 57, b: 239 });
-
+    
+    add_if_enabled(&mut noorfetch, "os", "os ", os.clone(), "\x1b[38;2;220;138;120m");
+    add_if_enabled(&mut noorfetch, "user", "user ", username.clone(), "\x1b[38;2;221;120;120m");
+    add_if_enabled(&mut noorfetch, "hostname", "host ", hostname.clone(), "\x1b[38;2;234;118;203m");
+    add_if_enabled(&mut noorfetch, "wm", "wm/de ", environment.clone(), "\x1b[38;2;136;57;239m");
+    
     add_if_enabled(
 	&mut noorfetch,
 	"ram",
 	"ram ",
 	format!("{}/{} MiB", used_memory / 1024 / 1024, total_memory / 1024 / 1024),
-	Color::TrueColor { r: 230, g: 69, b: 83 },
+	"\x1b[38;2;230;69;83m",
     );
     if used_swap > 0 && cfg.modules.get("swap").map_or(true, |m| m.display) {
 	noorfetch.push((
         "swap ".to_string(),
         format!("{}/{} MiB", used_swap / 1024 / 1024, total_swap / 1024 / 1024),
-        Color::TrueColor { r: 254, g: 100, b: 11 },
+        "\x1b[38;2;254;100;11m".to_string(),
     ));
 }
 
@@ -173,17 +183,17 @@ fn main() {
 	"cpu",
 	"cpu ",
 	format!("{} ({})", cpu_brand, cpu),
-	Color::TrueColor { r: 223, g: 142, b: 29 },
+	"\x1b[38;2;223;142;29m",
 );
 
 
-    add_if_enabled(&mut noorfetch, "krnl", "krnl ", kernel.clone(), Color::TrueColor { r: 64, g: 160, b: 43 });
+    add_if_enabled(&mut noorfetch, "krnl", "krnl ", kernel.clone(), "\x1b[38;2;64;160;43m");
 
     if days != "Unknown".to_lowercase() && days != "0 days" && days != "0" {
-	add_if_enabled(&mut noorfetch, "days", "days ", days.clone(), Color::TrueColor { r: 23, g: 146, b: 153 });
+	add_if_enabled(&mut noorfetch, "days", "days ", days.clone(), "\x1b[38;2;23;146;153m");
     }
     
-    add_if_enabled(&mut noorfetch, "init", "init", init, Color::TrueColor { r: 4, g: 165, b: 229 });
+    add_if_enabled(&mut noorfetch, "init", "init", init, "\x1b[38;2;4;165;229m");
 
     // Create a new vector. Создаем новый вектор
     let mut info_lines: Vec<String> = Vec::new();
@@ -192,17 +202,23 @@ fn main() {
     info_lines.push("-".repeat(username.len() + hostname.len() + 1));
 
     // Проверяем наличие флага --no-color/nc и выводим фетч
+    const BOLD: &str = "\x1b[1m";
+    const RESET: &str = "\x1b[0m";
+    
     if use_color {
-        for (label, value, color) in noorfetch {
-            info_lines.push(format!("{:<6} {}", label.color(color).bold(), value));
-        }
+	for (label, value, color_code) in noorfetch {
+            // Формат: [ЦВЕТ][ЖИРНЫЙ]label[СБРОС] value
+            // {:<6} не сработает корректно внутри строки с ANSI, 
+            // поэтому выравниваем саму метку (label) до 6 символов
+            let styled_label = format!("{}{}{: <6}{}", color_code, BOLD, label, RESET);
+            info_lines.push(format!("{} {}", styled_label, value));
+	}
     } else {
-        for (label, value, _) in noorfetch {
-            info_lines.push(format!("{:<6} {}", label.bold(), value));
-        }
+	for (label, value, _) in noorfetch {
+            info_lines.push(format!("{}{: <6}{} {}", BOLD, label, RESET, value));
+	}
     }
-
-/*    let art_lines: Vec<&str> = art.lines().collect();
+    /*    let art_lines: Vec<&str> = art.lines().collect();
     let art_width = art_lines.iter().map(|l| l.len()).max().unwrap_or(0);
     let padding = art_width + 5;
      */
