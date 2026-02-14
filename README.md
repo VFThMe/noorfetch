@@ -26,12 +26,6 @@ cd noorfetch
 makepkg -si
 ```
 
-### 🍺 Homebrew
-```bash
-brew tap vfthme/lim
-brew install noorfetch
-```
-
 **Or**
 ```bash
 yay -Syu  noorfetch
@@ -40,6 +34,11 @@ yay -Syu  noorfetch
 paru -Syu noorfetch
 ```
 
+### 🍺 Homebrew
+```bash
+brew tap vfthme/lim
+brew install noorfetch
+```
 ### Run the installer
 **Run** ``installer_unix.sh``.
 
