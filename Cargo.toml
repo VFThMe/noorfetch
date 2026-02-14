@@ -2,11 +2,16 @@
 name = "noorfetch"
 version = "2.0.0"
 keywords = ["fetch", "cli"]
+authors = ["limforge <limforge@neutronen.org>"]
 description = "Noorfetch is a blazingly fast and cool fetch written in Rust!"
 repository = "https://codeberg.org/limforge/noorfetch"
 license = "GPL-3.0-or-later"
 readme = "README.md"
 edition = "2024"
+
+[[bin]]
+name = "noorfetch"
+path = "src/main.rs"
 
 [profile.release]
 opt-level = 3
@@ -18,8 +23,6 @@ strip = true
 [dependencies]
 chrono = "0.4.43"
 colored = "3.1.1"
-confy = "2.0.0"
-directories = "6.0.0"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
 sysinfo = "0.37.2"

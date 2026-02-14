@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
-use directories::ProjectDirs;
-use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ModuleConfig {
@@ -19,13 +18,11 @@ impl ModuleConfig {
     pub fn from_key(key: &str) -> Self {
         match key {
             "init" => Self { display: false },
-            _ => Self::default(),           
+            _ => Self::default(),
         }
     }
 }
 
-// Функция для установки значения по умолчанию при десериализации,
-// если поле "logo" отсутствует в старом json файле.
 fn default_logo() -> String {
     "default".to_string()
 }
@@ -34,8 +31,7 @@ fn default_logo() -> String {
 pub struct Config {
     #[serde(rename = "Modules")]
     pub modules: HashMap<String, ModuleConfig>,
-    
-    // Новое поле для логотипа с поддержкой дефолтного значения
+
     #[serde(default = "default_logo")]
     pub logo: String,
 }
@@ -43,47 +39,82 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         let mut modules = HashMap::new();
-        // Список модулей по умолчанию
         let keys = vec!["os", "user", "hostname", "ram", "swap", "cpu", "krnl", "days", "init"];
-        
+
         for key in keys {
             modules.insert(key.to_string(), ModuleConfig::from_key(key));
         }
 
-        Config { 
+        Config {
             modules,
-            logo: default_logo(), // Устанавливаем "default"
+            logo: default_logo(),
         }
     }
 }
 
-pub fn get_path() -> PathBuf {
-    if let Some(proj_dirs) = ProjectDirs::from("", "", "noorfetch") {
-        let config_dir = proj_dirs.config_dir();
-        if !config_dir.exists() {
-            let _ = fs::create_dir_all(config_dir);
-        }
-        config_dir.join("config.json")
-    } else {
-        PathBuf::from("config.json")
+fn get_config_path() -> PathBuf {
+    let home = std::env::var_os("HOME").map(PathBuf::from);
+
+    let mut base = match home {
+        Some(p) => p,
+        None => return PathBuf::from("config.json"), // крайний fallback
+    };
+
+    #[cfg(target_os = "macos")]
+    {
+        base.push("Library/Application Support/noorfetch/config.json");
     }
+
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "freebsd",
+        target_os = "netbsd",
+        target_os = "openbsd"
+    ))]
+    {
+        base.push(".config/noorfetch/config.json");
+    }
+    
+    #[cfg(not(any(
+        target_os = "macos",
+        target_os = "linux",
+        target_os = "freebsd",
+        target_os = "netbsd",
+        target_os = "openbsd"
+    )))]
+    {
+        base.push("noorfetch/config.json"); // fallback
+    }
+
+    base
 }
 
 pub fn load_config() -> Config {
-    let path = get_path();
+    let path = get_config_path();
+
+    if let Some(parent) = path.parent() {
+        let _ = fs::create_dir_all(parent);
+    }
 
     if !path.exists() {
         let default_config = Config::default();
-        let json = serde_json::to_string_pretty(&default_config).unwrap();
-        fs::write(&path, json).expect("Failed to write default config");
+        if let Ok(json) = serde_json::to_string_pretty(&default_config) {
+            let _ = fs::write(&path, json);
+        }
         return default_config;
     }
 
-    let content = fs::read_to_string(&path).expect("Failed to read config file");
-
-    // Пытаемся распарсить JSON. Если структура не совпадает — возвращаем дефолт
-    serde_json::from_str::<Config>(&content).unwrap_or_else(|e| {
-        eprintln!("Error parsing config: {}, using defaults", e);
-        Config::default()
-    })
+    match fs::read_to_string(&path) {
+        Ok(content) => match serde_json::from_str::<Config>(&content) {
+            Ok(cfg) => cfg,
+            Err(e) => {
+                eprintln!("Error parsing config: {}, using defaults", e);
+                Config::default()
+            }
+        },
+        Err(e) => {
+            eprintln!("Failed to read config file: {}, using defaults", e);
+            Config::default()
+        }
+    }
 }
