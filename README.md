@@ -1,6 +1,6 @@
 # Noorfetch
 
-![Static Badge](https://img.shields.io/badge/release-2.1.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_LGPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue) ![Static Badge](https://img.shields.io/badge/Available_on-Homebrew-yellow)
+![Static Badge](https://img.shields.io/badge/release-2.1.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_LGPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue) ![Static Badge](https://img.shields.io/badge/Available_on-Homebrew-yellow) ![Static Badge](https://img.shields.io/badge/Available_on-Cargo-red)
 
 
 **Noorfetch (arab. نور)** is a minimalistic and fast summary of information about your computer, written in Rust!
@@ -61,7 +61,7 @@ noorfetch
 ```
 
 ## License
-noorfetch is distributed under the **GNU General Public License v3.0 or later**.
+noorfetch is distributed under the **GNU Lesser General Public License v3.0 or later**.
 
 This project incorporates the following Rust libraries (crates):
 * [sysinfo-0.38.1](https://crates.io/crates/sysinfo) - MIT License
