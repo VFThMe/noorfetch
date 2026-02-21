@@ -5,7 +5,7 @@ pub enum Distro {
     EndeavourOS, Trisquel, NixOS, Bazzite, Manjaro, Artix, Void,
     ALT, Guix, Kali, OpenSUSE, Lubuntu, Xubuntu, Vanilla, Garuda,
     Deepin, Nobara, Tails, RedHat, Calculate, Devuan, CentOS,
-    ElementaryOS, PopOS, FreeBSD, NetBSD, OpenBSD, Unknown,
+    ElementaryOS, PopOS, FreeBSD, NetBSD, OpenBSD, GNU, Tux, Slackware, Unknown,
 }
 
 impl Distro {
@@ -52,6 +52,9 @@ impl Distro {
             ("freebsd", Distro::FreeBSD),
             ("netbsd", Distro::NetBSD),
             ("openbsd", Distro::OpenBSD),
+	    ("gnu", Distro::GNU),
+	    ("tux", Distro::Tux),
+	    ("slackware", Distro::Slackware),
         ];
 
         // Ищем первое совпадение
@@ -514,7 +517,43 @@ eee    eeeeeeeeee     eeeeee    eee
 {Y} |_  <   )  3 ){RESET}
 {Y} / \         /{RESET}
 {Y}    /-_____-\{RESET}"#,
-        };
+	Distro::GNU => r#"
+    _-`````-,           ,- '- .
+  .'   .- - |          | - -.  `.
+ /.'  /                     `.   \
+:/   :      _...   ..._      ``   :
+::   :     /._ .`:'_.._\.    ||   :
+::    `._ ./  ,`  :    \ . _.''   .
+`:.      /   |  -.  \-. \\_      /
+  \:._ _/  .'   .@)  \@) ` `\ ,.'
+     _/,--'       .- .\,-.`--`.
+       ,'/''     (( \ `  )
+        /'/'  \    `-'  (
+         '/''  `._,-----'
+          ''/'    .,---'
+           ''/'      ;:
+             ''/''  ''/
+               ''/''/''
+                 '/'/'
+                  `;"#,
+    Distro::Tux => r#"
+    .--.
+   |o_o |
+   |:_/ |
+  //   \ \
+ (|     | )
+/'\_   _/`\
+\___)=(___/ 
+"#,
+    Distro::Slackware => r#"
+   ________
+  /  ______|
+  | |______
+  \______  \
+   ______| |
+| |________/
+|____________
+"#, };
 	art.replace("{G}", G)
             .replace("{Y}", Y)
             .replace("{O}", O)
