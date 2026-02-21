@@ -237,7 +237,7 @@ impl Distro {
 {B}   'ookxxkoo'`   .'oo'{RESET}
 {B}  'ooxoo'`     .:ooxxo'{RESET}
 {B} 'io'`             `'oo'{RESET}
-'`                     `'"{RESET}"#,
+'`                     `'{RESET}"#,
             Distro::Void => r#"
 {G}    _______{RESET}
 {G} _ \______ -{RESET}
