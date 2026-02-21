@@ -1,6 +1,6 @@
 # Noorfetch
 
-![Static Badge](https://img.shields.io/badge/release-2.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
+![Static Badge](https://img.shields.io/badge/release-3.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
 
 **Noorfetch (arab. نور)** is a minimalistic and fast summary of information about your computer, written in Rust!
 
