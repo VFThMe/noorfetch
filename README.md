@@ -1,6 +1,6 @@
 # Noorfetch
 
-![Static Badge](https://img.shields.io/badge/release-3.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_LGPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
+![Static Badge](https://img.shields.io/badge/release-3.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_LGPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-Homebrew-yellow) ![Static Badge](https://img.shields.io/badge/Available_on-Cargo-red)
 
 **Noorfetch (arab. نور)** is a minimalistic and fast summary of information about your computer, written in Rust!
 
@@ -17,19 +17,17 @@ See GOALS.md file
 
 **Git** version `2.52.0`
 
-**Or**
-```bash
-yay -Syu  noorfetch
-```
-```bash
-paru -Syu noorfetch
-```
-
 ### 🍺 Homebrew
 ```bash
 brew tap vfthme/lim
 brew install noorfetch
 ```
+
+### 🦀 Cargo
+```bash
+cargo install noorfetch
+```
+
 ### Run the installer
 **Run** ``installer_unix.sh``.
 
