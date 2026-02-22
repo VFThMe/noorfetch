@@ -1,6 +1,6 @@
 # Noorfetch
 
-![Static Badge](https://img.shields.io/badge/release-3.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
+![Static Badge](https://img.shields.io/badge/release-3.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_LGPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
 
 **Noorfetch (arab. نور)** is a minimalistic and fast summary of information about your computer, written in Rust!
 
@@ -16,14 +16,6 @@ See GOALS.md file
 **Cargo** version `2024`
 
 **Git** version `2.52.0`
-
-### AUR
-Get **Noorfetch** from **AUR** (Arch User Repository) right now!
-```bash
-git clone https://aur.archlinux.org/noorfetch.git
-cd noorfetch
-makepkg -si
-```
 
 **Or**
 ```bash
