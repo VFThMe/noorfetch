@@ -1,0 +1,11 @@
+
+
+{G} .oooo.{RESET}
+{G}o   o  o{RESET}
+{G}ooooo  oo{RESET}
+{G}o      oo{RESET}
+{G} 'oooooooooooo.{RESET}
+{G}       oo      o{RESET}
+{G}       oo  ooooo{RESET}
+{G}        o  o   o{RESET}
+{G}         'oooo'{RESET}

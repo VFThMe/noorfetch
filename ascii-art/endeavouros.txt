@@ -1,0 +1,9 @@
+
+
+            {M}/o.{RESET}
+         {O}/{RESET}{M}sssso{RESET}{B}-{RESET}
+        {O}/{RESET}{M}ossssssso{RESET}{B}:{RESET}
+     {O}/{RESET}{M}sssssssssss{RESET}{B}o+{RESET}
+   {O}/{RESET}{M}ssssssssssssssso{RESET}{B}+{RESET}
+  {O}//{RESET}{M}osssssssssssssso{RESET}{B}+-{RESET}
+  {B} `+++++++++++++++-`{RESET}

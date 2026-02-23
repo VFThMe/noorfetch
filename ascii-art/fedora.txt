@@ -1,0 +1,7 @@
+
+
+{B}     __{RESET}
+    /  \{RESET}
+{B} __ |_{RESET}
+{B}/   |{RESET}
+{B}\__/{RESET}

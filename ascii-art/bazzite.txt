@@ -1,0 +1,19 @@
+
+{M}    \\KK999999000009999999{RESET}
+{M}   --\++++{RESET}KKKK{M}++++++++++++++,-{RESET}
+{M}  \+++++++{RESET}KKKK{M}++++++++++==~```,,-{RESET}
+{M}  9+++++++{RESET}KKKK{M}++++++++++~~````+++--{RESET}
+{M}9{RESET}KKNNNNKKKKTKKKKKNNNNNNKKK{M}+`````+9{RESET}
+{M}9{RESET}KKKKTTTTTTTTTTKTKKKDDDKKKK{M}``````0{RESET}
+{M}9++{RESET}{M}+++++{RESET}KKLK{M}+++++++++++++{RESET}KKKK{M}````0{RESET}
+{M}0++{RESET}{M}+++++{RESET}KKLK{M}++++{RESET}{B}++++++++++{RESET}TKN{M}````0{RESET}
+{M}0{B}+++++++{RESET}KNLK{B}+++++++++++++++{RESET}KN{M}```{RESET}{M}`0{RESET}
+{M}0{RESET}{B}++++++~{RESET}KNLK{RESET}{B}+++++++++++++++{RESET}KK{B}````{RESET}{M}9{RESET}
+{M}0{RESET}{B}++++++~{RESET}KNLK{B}++++++++++++++{RESET}KKK{B}````{RESET}{M}9{RESET}
+  9+++++++KKKK+++++++++++[KKKK+````9
+  9+++++++KKKN+++++++++NNNNKKK`````9
+  9++++++++KKN++++++[[[KNKKKK``````9
+   vv+++++++KNKKNNNNKKKKKKK```````-
+    vv++++==+KKKKKKKKKKK````````,,
+      +vvv,vv+~~"""""""">M>~~`--
+            v99999999999          

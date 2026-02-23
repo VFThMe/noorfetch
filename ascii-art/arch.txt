@@ -1,0 +1,8 @@
+
+{M}         /\{RESET}
+{M}        /  \{RESET}
+{M}       /    \{RESET}
+{B}      /      \{RESET}
+{B}     /   ,,   \{RESET}
+{B}    /   |  |   \{RESET}
+{B}   /_-''    ''-_\{RESET}

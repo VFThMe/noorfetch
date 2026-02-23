@@ -1,0 +1,13 @@
+{B}            '
+{B}           'A'{RESET}
+{B}          'ooo'{RESET}
+{B}         'ookxo'{RESET}
+{B}         `ookxxo'{RESET}
+{B}       '.   `ooko'{RESET}
+{B}      'ooo`.   `oo'{RESET}
+{B}     'ooxxxoo`.   `'{RESET}
+{B}    'ookxxxkooo.`   .{RESET}
+{B}   'ookxxkoo'`   .'oo'{RESET}
+{B}  'ooxoo'`     .:ooxxo'{RESET}
+{B} 'io'`             `'oo'{RESET}
+'`                     `'{RESET}

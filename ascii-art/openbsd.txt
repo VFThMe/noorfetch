@@ -1,0 +1,9 @@
+
+
+{Y}      _____{RESET}
+{Y}    \-     -/{RESET}
+{Y} \_/         \{RESET}
+{Y} |        O O |{RESET}
+{Y} |_  <   )  3 ){RESET}
+{Y} / \         /{RESET}
+{Y}    /-_____-\{RESET}
