@@ -1,0 +1,17 @@
+
+     -#. #
+      @###
+{B}  -######{RESET}
+{B} @#########{RESET}
+{B}=##. {RESET} .#####
+{B}##     {RESET} ## ##
+{B}##       {RESET}## #
+{B}##       {RESET}@###
+{B}##.        {RESET}###
+{B}##%       {RESET}##-
+{B}  -##%{RESET}    -*
+{B}   :*##+{RESET}
+{B}     :*#*{RESET}
+{B}       -#{RESET}
+{B}        @{RESET}
+{B}        :{RESET}

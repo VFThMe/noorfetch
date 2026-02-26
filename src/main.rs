@@ -1,18 +1,18 @@
-use sysinfo::{
-    System, Pid
-};
-use std::*;
+use sysinfo::{System, Pid};
+use std::path::PathBuf;
 use std::time::Instant;
+use std::{process, env};
 use std::io::{self, IsTerminal};
+use dirs::config_dir;
 
-#[path = "Settings/ascii.rs"]
+#[path = "settings/ascii.rs"]
 mod ascii;
 use ascii::Distro;
-#[path = "Settings/environment.rs"]
+#[path = "settings/environment.rs"]
 mod environment;
-#[path = "Settings/date.rs"]
+#[path = "settings/date.rs"]
 mod date;
-#[path = "Settings/config.rs"]
+#[path = "settings/config.rs"]
 mod config;
 
 fn main() {
@@ -87,14 +87,21 @@ fn main() {
             os.clone()
         };
 
-        let mut distro = Distro::from_string(&logo_name);
+        let mut distro = logo_name.parse::<Distro>().unwrap_or(Distro::Unknown);
 
         if matches!(distro, Distro::Unknown) && logo_name != "Unknown" {
             eprintln!("warning: logo '{}' not recognized, falling back to auto-detection", logo_name);
-            distro = Distro::from_string(&os);
+            distro = os.parse::<Distro>().unwrap_or(Distro::Unknown);
         }
 
-        distro.ascii_art()
+        let config_dir = config_dir().unwrap_or_else(|| {
+            eprintln!("warning: could not find config directory, using fallback");
+            PathBuf::from(".config")
+        });
+
+        let ascii_arts_dir = config_dir.join("noorfetch").join("ascii-art");
+
+        distro.ascii_art(&ascii_arts_dir)
     };
 
     // -- Updating system information -- //
@@ -193,7 +200,7 @@ fn main() {
             entries.push((m.order, label, value, color));
         }
     }
-    
+
     if used_swap > 0 {
         if let Some(m) = cfg.modules.get("swap") {
             if m.display {
@@ -226,7 +233,7 @@ fn main() {
     }
 
     add_simple!("krnl", "krnl", kernel.clone(), (64, 160, 43));
-    
+
     if days != "unknown" && days != "0 days" && days != "0" {
         add_simple!("days", "days", days.clone(), (23, 146, 153));
     }

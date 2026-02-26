@@ -1,0 +1,8 @@
+
+{M} _-----_{RESET}
+{M}(       \{RESET}
+{M}\    0   \{RESET}
+{M}\        ){RESET}
+{M} /      _/{RESET}
+{M}(     _-{RESET}
+{M}\____-{RESET}

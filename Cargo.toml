@@ -27,3 +27,6 @@ indexmap = { version = "2.13.0", features = ["serde"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
 sysinfo = "0.37.2"
+strum = { version = "0.26", features = ["derive"] }
+strum_macros = "0.26"
+dirs = "5"

@@ -1,0 +1,10 @@
+
+{G}    ____________{RESET}
+{G}   /            /  o{RESET}
+{G}  /      ______/{RESET}
+{G} /      /        o{RESET}
+{G}/      /{RESET}
+{G}\      \{RESET}
+{G} \      \__________ o{RESET}
+{G}  \               /{RESET}
+{G}   \_____________/{RESET}
