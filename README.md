@@ -1,6 +1,7 @@
 # Noorfetch
 
-![Static Badge](https://img.shields.io/badge/release-3.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_GPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
+
+![Static Badge](https://img.shields.io/badge/release-4.0.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/license-GNU_LGPL--v3.0-green?style=flat) ![Static Badge](https://img.shields.io/badge/Available_on-Homebrew-yellow) ![Static Badge](https://img.shields.io/badge/Available_on-Cargo-red) ![Static Badge](https://img.shields.io/badge/Available_on-AUR-blue)
 
 **Noorfetch (arab. نور)** is a minimalistic and fast summary of information about your computer, written in Rust!
 
@@ -58,8 +59,7 @@ noorfetch
 noorfetch is distributed under the **GNU General Public License v3.0 or later**.
 
 This project incorporates the following Rust libraries (crates):
-* [sysinfo-0.38.1](https://crates.io/crates/sysinfo) - MIT License
-* [whoami-v2.1.1](https://crates.io/crates/whoami) - Apache-2.0, BSL-1.0, or MIT License
-* [colored-3.1.1](https://crates.io/crates/colored) - MPL-2.0 License
-* [os-release-0.1.0](https://crates.io/crates/os-release) - MIT License
+* [sysinfo-0.37.2](https://crates.io/crates/sysinfo) - MIT License
 * [chrono-0.4.43](https://crates.io/crates/chrono) - Apache-2.0 or MIT License
+* [serde-1.0.228](https://crates.io/crates/serde) - MIT License or Apache-2.0
+* [indexmap-2.13.0](https://crates.io/crates/indexmap) - MIT License or Apache-2.0
