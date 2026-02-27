@@ -1,12 +1,7 @@
 use std::env;
 
 pub fn get_wm() -> Option<String> {
-    if let Ok(desktop) = env::var("XDG_SESSION_DESKTOP") {
-        if !desktop.is_empty() { return Some(desktop); }
-    }
-    if let Ok(session) = env::var("DESKTOP_SESSION") {
-        if !session.is_empty() { return Some(session); }
-    }
-    
-    None
+    ["XDG_SESSION_DESKTOP", "DESKTOP_SESSION", "XDG_CURRENT_DESKTOP"]
+        .iter()
+        .find_map(|var| env::var(var).ok().filter(|v| !v.is_empty()))
 }

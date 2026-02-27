@@ -75,7 +75,7 @@ fn main() {
                 }
             }
         });
-
+    
     let art = if let Some(custom) = custom_art {
         custom
     } else {
@@ -210,7 +210,7 @@ fn main() {
             }
         }
     }
-
+	
     if let Some(m) = cfg.modules.get("cpu") {
         if m.display {
             let cores = cpu_count.to_string();
@@ -224,6 +224,65 @@ fn main() {
             entries.push((m.order, label, value, color));
         }
     }
+
+   if let Some(m) = cfg.modules.get("disk") {
+    if m.display {
+        use std::collections::HashMap;
+        let disks = sysinfo::Disks::new_with_refreshed_list();
+        
+        let mut disk_map: HashMap<String, (u64, u64)> = HashMap::new();
+        for disk in disks.list() {
+            let dev = disk.name().to_string_lossy();
+
+            let base = dev
+                .trim_end_matches(|c: char| c.is_ascii_digit())
+                .trim_end_matches('p')
+                .to_string();
+            let entry = disk_map.entry(base).or_insert((0, 0));
+            entry.0 += disk.total_space();
+            entry.1 += disk.available_space();
+        }
+
+        let color = if m.color.is_some() { m.resolve_color() } else { (137, 180, 250) };
+
+        let mut disk_names: Vec<String> = disk_map.keys().cloned().collect();
+        disk_names.sort();
+
+        for name in disk_names {
+            let (total, avail) = disk_map[&name];
+            if total == 0 { continue; }
+
+            let used = total.saturating_sub(avail);
+            let pct  = (used as f64 / total as f64 * 100.0) as u32;
+
+            let bar_total  = 10usize;
+            let bar_filled = (pct as usize * bar_total / 100).min(bar_total);
+
+            let (br, bg, bb) = if pct < 50 {
+                (166u8, 227u8, 161u8)  // зелныq
+            } else if pct < 80 {
+                (249u8, 226u8, 175u8)  // желтый
+            } else {
+                (243u8, 139u8, 168u8)  // красный
+            };
+
+            let filled_block = if use_color {
+                format!("\x1b[38;2;{};{};{}m{}\x1b[0m", br, bg, bb, "█".repeat(bar_filled))
+            } else {
+                "█".repeat(bar_filled)
+            };
+
+            let bar = format!("[{}{}]", filled_block, " ".repeat(bar_total - bar_filled));
+
+            let used_gb  = used  / 1024 / 1024 / 1024;
+            let total_gb = total / 1024 / 1024 / 1024;
+            let value = format!("{} {} {}/{} GB ({}%)", name, bar, used_gb, total_gb, pct);
+
+            let label = "disks".to_string();
+            entries.push((m.order, label, value, color));
+        }
+    }
+}
 
     add_simple!("krnl", "krnl", kernel.clone(), (64, 160, 43));
     
@@ -273,7 +332,7 @@ fn main() {
         let visible          = visible_len(&art_row);
         let current_padding  = if padding > visible { padding - visible } else { 0 };
 
-        println!("{}{:<width$} {}", art_row, "", info_row, width = current_padding);
+	println!("{}{:<width$} {}", art_row, "", info_row, width = current_padding);
     }
 
     if debug {

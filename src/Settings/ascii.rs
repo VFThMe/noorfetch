@@ -52,9 +52,9 @@ impl Distro {
             ("freebsd", Distro::FreeBSD),
             ("netbsd", Distro::NetBSD),
             ("openbsd", Distro::OpenBSD),
-	    ("gnu", Distro::GNU),
-	    ("tux", Distro::Tux),
-	    ("slackware", Distro::Slackware),
+	          ("gnu", Distro::GNU),
+	          ("tux", Distro::Tux),
+	          ("slackware", Distro::Slackware),
         ];
 
         // Ищем первое совпадение
@@ -63,11 +63,11 @@ impl Distro {
             .map(|(_, distro)| *distro)
             .unwrap_or(Distro::Unknown)
     }    
-// Возвращаем ASCII арт для каждого дистрибутива
+    // Возвращаем ASCII арт для каждого дистрибутива
     pub fn ascii_art(&self) -> String {
 	
-	const G: &str = "\x1b[32m";
-	const J: &str = "\x1b[36m";
+      	const G: &str = "\x1b[32m";
+	      const J: &str = "\x1b[36m";
         const Y: &str = "\x1b[33m";
         const O: &str = "\x1b[38;5;208m";
         const R: &str = "\x1b[31m";
@@ -224,7 +224,8 @@ impl Distro {
 {G}|||| |||| ||||{RESET}
 {G}|||| |||| ||||{RESET}
 {G}|||| |||| ||||{RESET}
-{G}|||| |||| ||||{RESET}"#,
+{G}|||| |||| ||||{RESET}
+"#,
             Distro::Artix => r#"{B}            '
 {B}           'A'{RESET}
 {B}          'ooo'{RESET}
@@ -318,25 +319,25 @@ impl Distro {
       MMp`                     NN'      
        MMpvv`               ooNN        
           `vvvvv'          ggg'"#,
-        Distro::Xubuntu => r#"             __ygg@@@@@@@@@ggy__
-         _yg@@@@@@@@@@@@@@@@@@@@@gy_
-      _a@@@@@@@@@@@@@@@@@@@@@@@@@@@@@y_
-    _a@@@@@@@@@@@@@@@@@@@@@@@#@@@@@@@@@g_
-   a@@@@@@@@@@@@@###@@@@@@@@##@@@@##@@@@@k
-  g@@@@@@@###@@@#####@@@@@@@##@@###@@@@@@@k
- a@@@@@@@@#####@#####@@@@@@##@@###@@@@@@@@@k
-j@@@@@@@@@############@@@@@##@###@@@@@@@@@@@k
-g@@@@@@@@@#####################@@@@@@@@@@@@@@
-@@@@@@@@@##########################@@@@@@@@@@
-0@@@@@@@@###########################@@@@@@@@@
-~@@@@@@@############################@@@@@@@@F
- 9@@@@@@##########################@@@@@@@@@P
-  4@@@@@@######################@@@@@@@@@@@P
-   ~@@@@@@################@@@@@@@@@@@@@@@F
-    `4@@@@@@#######@@@@@@@@@@@@@@@@@@@@P`
-      `~@@@@@@@@@@@@@@@@@@@@@@@@@@@@@F`
-         ~~4@@@@@@@@@@@@@@@@@@@@@P~~
-             `~~=R@@@@@@@@@P=~~~"#,
+        Distro::Xubuntu => r#"{B}             __ygg@@@@@@@@@ggy__                                   {RESET}
+{B}         _yg@@@@@@@@@@@@@@@@@@@@@gy_                               {RESET}
+{B}      _a@@@@@@@@@@@@@@@@@@@@@@@@@@@@@y_                            {RESET}
+{B}    _a@@@@@@@@@@@@@@@@@@@@@@@{RESET}#{RESET}{B}@@@@@@@@@g_                          {RESET}
+{B}   a@@@@@@@@@@@@@{RESET}###{RESET}{B}@@@@@@@@{RESET}##{RESET}{B}@@@@{RESET}##{RESET}{B}@@@@@k                         {RESET}
+{B}  g@@@@@@@{RESET}###{RESET}{B}@@@{RESET}#####{RESET}{B}@@@@@@@{RESET}##{RESET}{B}@@{RESET}###{RESET}{B}@@@@@@@k                       {RESET}
+{B} a@@@@@@@@{RESET}#####{RESET}{B}@{RESET}#####{RESET}{B}@@@@@@{RESET}##{RESET}{B}@@{RESET}###{RESET}{B}@@@@@@@@@k                     {RESET}
+{B}j@@@@@@@@@{RESET}############{RESET}{B}@@@@@{RESET}##{RESET}{B}@{RESET}###{RESET}{B}@@@@@@@@@@@k                   {RESET}
+{B}g@@@@@@@@@{RESET}#####################{RESET}{B}@@@@@@@@@@@@@@                  {RESET}
+{B}@@@@@@@@@{RESET}##########################{RESET}{B}@@@@@@@@@@                 {RESET}
+{B}0@@@@@@@@{RESET}###########################{RESET}{B}@@@@@@@@@                {RESET}
+{B}~@@@@@@@{RESET}############################{RESET}{B}@@@@@@@@F               {RESET}
+{B} 9@@@@@@{RESET}##########################{RESET}{B}@@@@@@@@@P              {RESET}
+{B}  4@@@@@@{RESET}######################{RESET}{B}@@@@@@@@@@@P             {RESET}
+{B}   ~@@@@@@{RESET}################{RESET}{B}@@@@@@@@@@@@@@@F            {RESET}
+{B}    `4@@@@@@{RESET}#######{RESET}{B}@@@@@@@@@@@@@@@@@@@@P`           {RESET}
+{B}      `~@@@@@@@@@@@@@@@@@@@@@@@@@@@@@F`                             {RESET}
+{B}         ~~4@@@@@@@@@@@@@@@@@@@@@P~~                                {RESET}
+"#,
             Distro::Vanilla => r#"
 
 {Y}      ,x.{RESET}
@@ -500,10 +501,12 @@ eee    eeeeeeeeee     eeeeee    eee
  {R}|           |{RESET}
  {R} ;         ;{RESET}
  {R}  '-_____-'{RESET}"#,
-        Distro::NetBSD => r#" \\`-______,----__
-  \\        __,---`_
-   \\       `.____
-    \\-______,----`-
+        Distro::NetBSD => r#"
+        
+ \\{O}`-______,----__{RESET}
+  \\{O}'.        __,---`_{RESET}
+   \\{O}'.       `.____{RESET}
+    \\{O}'-______,----`-{RESET}
      \\
       \\
        \\
@@ -537,13 +540,13 @@ eee    eeeeeeeeee     eeeeee    eee
                  '/'/'
                   `;"#,
     Distro::Tux => r#"
-    .--.
-   |o_o |
-   |:_/ |
-  //   \ \
- (|     | )
-/'\_   _/`\
-\___)=(___/ 
+  {Y}  .--.{RESET}
+   {Y}|{RESET}o_o{Y} |{RESET}
+   {Y}|:_/ |{RESET}
+  {B}//{   \ \{RESET}
+ {B}(|     | ){RESET}
+{Y}/'\_   _/`\{RESET}
+{Y}\___)=(___/{RESET}
 "#,
     Distro::Slackware => r#"
    ________

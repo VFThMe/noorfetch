@@ -2,18 +2,12 @@ use std::fs;
 use std::time::SystemTime;
 
 pub fn get_install_days() -> String {
-    let target_path = "/usr/"; 
-
-    if let Ok(metadata) = fs::metadata(target_path) {
-        let install_time = metadata.created()
-            .or_else(|_| metadata.modified())
-            .unwrap_or_else(|_| SystemTime::now());
-
-        if let Ok(duration) = SystemTime::now().duration_since(install_time) {
-            let days = duration.as_secs() / 86400;
-            return format!("{} days", days);
-        }
-    }
+    let now = SystemTime::now();
     
-    "unknown".to_string()
+    fs::metadata("/usr/")
+        .ok()
+        .and_then(|m| m.created().or_else(|_| m.modified()).ok())
+        .and_then(|t| now.duration_since(t).ok())
+        .map(|d| format!("{} days", d.as_secs() / 86400))
+        .unwrap_or_else(|| "unknown".to_string())
 }

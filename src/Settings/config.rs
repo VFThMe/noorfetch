@@ -47,9 +47,10 @@ impl ModuleConfig {
             "ram"      => (true,  Some("#E64553"), 5),
             "swap"     => (true,  Some("#FE640B"), 6),
             "cpu"      => (true,  Some("#DF8E1D"), 7),
-            "krnl"     => (true,  Some("#40A02B"), 8),
-            "days"     => (true,  Some("#179299"), 9),
-            "init"     => (false, Some("#04A5E5"), 10),
+            "disk"     => (false, Some("#89B4FA"), 8),
+            "krnl"     => (true,  Some("#40A02B"), 9),
+            "days"     => (true,  Some("#179299"), 10),
+            "init"     => (false, Some("#04A5E5"), 11),
             _          => (true,  None,            99),
         };
 
@@ -110,7 +111,7 @@ pub struct Config {
 
 impl Default for Config {
     fn default() -> Self {
-        let keys = ["os", "user", "hostname", "wm", "ram", "swap", "cpu", "krnl", "days", "init"];
+        let keys = ["os", "user", "hostname", "wm", "ram", "swap", "cpu", "disk", "krnl", "days", "init"];
         let modules = keys
             .iter()
             .map(|&k| (k.to_string(), ModuleConfig::from_key(k)))
