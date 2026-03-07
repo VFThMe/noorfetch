@@ -3,9 +3,30 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 
-fn default_display() -> bool { true }
-fn default_order() -> u32 { 99 }
-fn default_format() -> String { "{value}".to_string() }
+fn default_display() -> bool {
+    true
+}
+fn default_order() -> u32 {
+    99
+}
+fn default_format() -> String {
+    "{value}".to_string()
+}
+
+const MODULE_KEYS: &[(&str, bool, Option<&str>, u32)] = &[
+    ("os", true, Some("#DC8A78"), 1),
+    ("user", true, Some("#DD7878"), 2),
+    ("hostname", true, Some("#EA76CB"), 3),
+    ("shell", false, Some("#209FBE"), 4),
+    ("wm", true, Some("#8839EF"), 5),
+    ("ram", true, Some("#E64553"), 6),
+    ("swap", true, Some("#FE640B"), 7),
+    ("cpu", true, Some("#DF8E1D"), 8),
+    ("disk", false, Some("#89B4FA"), 9),
+    ("krnl", true, Some("#40A02B"), 10),
+    ("days", true, Some("#179299"), 11),
+    ("init", false, Some("#04A5E5"), 12),
+];
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ModuleConfig {
@@ -39,45 +60,49 @@ impl Default for ModuleConfig {
 
 impl ModuleConfig {
     pub fn from_key(key: &str) -> Self {
-        let (display, color, order) = match key {
-            "os"       => (true,  Some("#DC8A78"), 1),
-            "user"     => (true,  Some("#DD7878"), 2),
-            "hostname" => (true,  Some("#EA76CB"), 3),
-            "wm"       => (true,  Some("#8839EF"), 4),
-            "ram"      => (true,  Some("#E64553"), 5),
-            "swap"     => (true,  Some("#FE640B"), 6),
-            "cpu"      => (true,  Some("#DF8E1D"), 7),
-            "disk"     => (false, Some("#89B4FA"), 8),
-            "krnl"     => (true,  Some("#40A02B"), 9),
-            "days"     => (true,  Some("#179299"), 10),
-            "init"     => (false, Some("#04A5E5"), 11),
-            _          => (true,  None,            99),
-        };
+        let (display, color, order) = MODULE_KEYS
+            .iter()
+            .find(|(k, _, _, _)| *k == key)
+            .map(|(_, d, c, o)| (*d, *c, *o))
+            .unwrap_or((true, None, 99));
 
         let format = match key {
             "ram" | "swap" => "{used}/{total} MiB".to_string(),
-            "cpu"          => "{brand} ({cores})".to_string(),
-            _              => default_format(),
+            "cpu" => "{brand} ({cores})".to_string(),
+            _ => default_format(),
         };
 
-        Self { display, label: None, color: color.map(str::to_string), order, format }
+        Self {
+            display,
+            label: None,
+            color: color.map(str::to_string),
+            order,
+            format,
+        }
     }
-    
+
     pub fn resolve_label<'a>(&'a self, key: &'a str) -> &'a str {
         self.label.as_deref().unwrap_or(key)
     }
 
-    pub fn resolve_color(&self) -> (u8, u8, u8) {
+    pub fn resolve_color(&self, fallback: (u8, u8, u8)) -> (u8, u8, u8) {
         self.color
             .as_deref()
             .and_then(hex_to_rgb)
-            .unwrap_or((255, 255, 255))
+            .unwrap_or(fallback)
     }
 
     pub fn format_value(&self, vars: &[(&str, &str)]) -> String {
         let mut result = self.format.clone();
         for (name, val) in vars {
             result = result.replace(&format!("{{{}}}", name), val);
+        }
+        // Warn about leftover unresolved placeholders
+        if result.contains('{') && result.contains('}') {
+            eprintln!(
+                "warning: unresolved placeholder in format string: {}",
+                result
+            );
         }
         result
     }
@@ -94,8 +119,12 @@ fn hex_to_rgb(hex: &str) -> Option<(u8, u8, u8)> {
     Some((r, g, b))
 }
 
-fn default_logo() -> String { "default".to_string() }
-fn default_custom_art() -> Option<String> { None }
+fn default_logo() -> String {
+    "default".to_string()
+}
+fn default_custom_art() -> Option<String> {
+    None
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
@@ -111,25 +140,23 @@ pub struct Config {
 
 impl Default for Config {
     fn default() -> Self {
-        let keys = ["os", "user", "hostname", "wm", "ram", "swap", "cpu", "disk", "krnl", "days", "init"];
-        let modules = keys
+        let modules = MODULE_KEYS
             .iter()
-            .map(|&k| (k.to_string(), ModuleConfig::from_key(k)))
+            .map(|(k, _, _, _)| (k.to_string(), ModuleConfig::from_key(k)))
             .collect();
 
-        Config { modules, logo: default_logo(), custom_art: None }
+        Config {
+            modules,
+            logo: default_logo(),
+            custom_art: None,
+        }
     }
 }
 
 impl Config {
-    /// Переназначает `order` последовательно (1, 2, 3, …) по текущему
-    /// относительному порядку, а затем пересортировывает IndexMap так,
-    /// чтобы в сериализованном JSON ключи шли по возрастанию order.
     pub fn normalize_order(&mut self) {
-        // Сортируем ключи по текущему order
         self.modules.sort_by(|_, a, _, b| a.order.cmp(&b.order));
 
-        // Переназначаем order последовательно
         for (new_order, (_, module)) in self.modules.iter_mut().enumerate() {
             module.order = (new_order + 1) as u32;
         }
@@ -141,7 +168,7 @@ fn get_config_path() -> PathBuf {
 
     let mut base = match home {
         Some(p) => p,
-        None    => return PathBuf::from("config.json"),
+        None => return PathBuf::from("config.json"),
     };
 
     #[cfg(target_os = "macos")]
@@ -186,13 +213,9 @@ pub fn load_config() -> Config {
         Ok(content) => match serde_json::from_str::<Config>(&content) {
             Ok(mut cfg) => {
                 cfg.normalize_order();
-                // Перезаписываем файл с нормализованным порядком
-                if let Ok(json) = serde_json::to_string_pretty(&cfg) {
-                    let _ = fs::write(&path, json);
-                }
                 cfg
             }
-            Err(e)  => {
+            Err(e) => {
                 eprintln!("Error parsing config: {}, using defaults", e);
                 Config::default()
             }
