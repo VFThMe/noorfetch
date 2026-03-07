@@ -2,7 +2,6 @@ use std::env;
 use std::path::Path;
 
 pub fn get_wm() -> Option<String> {
-    // Try environment variables first (fast, no process spawning)
     let from_env = [
         "XDG_CURRENT_DESKTOP",
         "XDG_SESSION_DESKTOP",
@@ -15,7 +14,7 @@ pub fn get_wm() -> Option<String> {
         return Some(wm);
     }
 
-    // Fallback: check running processes via /proc
+    // fallback
     let known_wm = [
         "sway",
         "i3",
@@ -60,7 +59,6 @@ pub fn get_wm() -> Option<String> {
 
 pub fn get_shell() -> Option<String> {
     let raw = env::var("SHELL").ok().filter(|v| !v.is_empty())?;
-    // Return only the binary name, not the full path (e.g. /usr/bin/zsh -> zsh)
     Path::new(&raw)
         .file_name()
         .and_then(|n| n.to_str())
