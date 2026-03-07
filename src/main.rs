@@ -177,6 +177,77 @@ fn get_init() -> String {
         .unwrap_or_else(|| "Unknown".to_string())
 }
 
+fn get_packages() -> String {
+    let mut counts = Vec::new();
+
+    // Pacman (Arch, Manjaro, etc.)
+    if let Ok(entries) = std::fs::read_dir("/var/lib/pacman/local") {
+        let count = entries.count().saturating_sub(1); // -1 for ALPM_DB_VERSION usually
+        if count > 0 {
+            counts.push(format!("{} (pacman)", count));
+        }
+    }
+
+    // DPKG (Debian, Ubuntu, etc.)
+    if let Some(content) = read_file("/var/lib/dpkg/status") {
+        let count = content
+            .lines()
+            .filter(|l| l.starts_with("Package: "))
+            .count();
+        if count > 0 {
+            counts.push(format!("{} (dpkg)", count));
+        }
+    }
+
+    // XBPS (Void Linux)
+    if let Ok(entries) = std::fs::read_dir("/var/db/xbps") {
+        let count = entries
+            .filter_map(|e| e.ok())
+            .filter(|e| e.path().extension().is_some_and(|ext| ext == "plist"))
+            .count();
+        if count > 0 {
+            counts.push(format!("{} (xbps)", count));
+        }
+    }
+
+    // APK (Alpine)
+    if let Some(content) = read_file("/lib/apk/db/installed") {
+        let count = content.lines().filter(|l| l.starts_with("P:")).count();
+        if count > 0 {
+            counts.push(format!("{} (apk)", count));
+        }
+    }
+
+    // Flatpak
+    if let Ok(entries) = std::fs::read_dir("/var/lib/flatpak/app") {
+        let count = entries.count();
+        if count > 0 {
+            counts.push(format!("{} (flatpak)", count));
+        }
+    }
+
+    // Snap
+    if let Ok(entries) = std::fs::read_dir("/snap") {
+        let count = entries
+            .filter_map(|e| e.ok())
+            .filter(|e| {
+                let name = e.file_name();
+                let s = name.to_string_lossy();
+                s != "bin" && s != "README" && s != "core" && s != "snapd"
+            })
+            .count();
+        if count > 0 {
+            counts.push(format!("{} (snap)", count));
+        }
+    }
+
+    if counts.is_empty() {
+        "Unknown".to_string()
+    } else {
+        counts.join(", ")
+    }
+}
+
 fn main() {
     let startup = Instant::now();
 
@@ -420,6 +491,9 @@ fn main() {
     }
 
     add_simple(&mut entries, "krnl", "krnl", kernel.clone(), (64, 160, 43));
+
+    let packages = get_packages();
+    add_simple(&mut entries, "packages", "pkg", packages, (249, 226, 175));
 
     if let Some(days_val) = days {
         add_simple(&mut entries, "days", "days", days_val, (23, 146, 153));

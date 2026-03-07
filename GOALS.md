@@ -6,7 +6,5 @@
 - [x] Create initial ASCII art
 - [x] Create a colour for ASCII art
 - [x] Update configuration file
+- [x] Display the package quantity
 - [ ] Create --pallete/-p flag
-
-# Cancelled
--   ~~Display the package quantity~~
