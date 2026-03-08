@@ -26,6 +26,7 @@ const MODULE_KEYS: &[(&str, bool, Option<&str>, u32)] = &[
     ("krnl", true, Some("#40A02B"), 10),
     ("days", true, Some("#179299"), 11),
     ("init", false, Some("#04A5E5"), 12),
+    ("packages", true, Some("#F9E2AF"), 13),
 ];
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -212,6 +213,13 @@ pub fn load_config() -> Config {
     match fs::read_to_string(&path) {
         Ok(content) => match serde_json::from_str::<Config>(&content) {
             Ok(mut cfg) => {
+                // Merge missing default modules
+                let default_cfg = Config::default();
+                for (k, v) in default_cfg.modules {
+                    if !cfg.modules.contains_key(&k) {
+                        cfg.modules.insert(k, v);
+                    }
+                }
                 cfg.normalize_order();
                 cfg
             }
